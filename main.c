@@ -30,7 +30,8 @@ int main(int argc, char *argv[], char* envp[]) {
 
         // taken from: https://danrl.com/blog/2018/how-to-write-a-tiny-shell-in-c/
         // TODO: use strtok() instead
-        for (int i = 0; i < sizeof(args) && *ptr; ptr++) {
+        for (int i = 0; i < sizeof(args) && *ptr; ptr++) 
+        {
             if (*ptr == ' ') continue;
             if (*ptr == '\n') break;
             for (args[i++] = ptr; *ptr && *ptr != ' ' && *ptr != '\n'; ptr++);
