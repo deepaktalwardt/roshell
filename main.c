@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/wait.h>
 
 #define MAX_COMM_SIZE 255
 #define MAX_ARGS 8
@@ -45,5 +46,3 @@ int main(int argc, char *argv[], char* envp[]) {
         wait(NULL);
     }
 }
-
-
