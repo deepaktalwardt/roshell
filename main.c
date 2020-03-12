@@ -7,48 +7,10 @@
 #define MAX_COMM_SIZE 255
 #define MAX_ARGS 8
 
-//------------------------------------------------------------------------------
-//  sourceCommand()
-//
-//  Basic Functionality is to read a text file with list of shell commands
-//  Improvement is needed to support shell scripting
-//
-//------------------------------------------------------------------------------
-int sourceCommand(char** input)
-{
-    FILE  *sourceFile;
-    char sourceLine[MAX_COMM_SIZE+1] = {0x0};
-
-    sourceFile = fopen(input[1], "r");
-    while(fgets(sourceLine, MAX_COMM_SIZE, sourceFile) != NULL)
-    {
-        //printf("%s", sourceLine);
-        char* eachCommand[MAX_ARGS + 1] = { NULL };
-        char* ptr = sourceLine;
-        for (int i = 0; i < sizeof(sourceLine) && *ptr; ptr++)
-        {
-            if (*ptr == ' ') continue;
-            if ((*ptr == '\n') || (*ptr == '\0')) break;
-            for (eachCommand[i++] = ptr; *ptr && *ptr != ' ' && *ptr != '\n'; ptr++);
-            *ptr = '\0';
-        }
-
-        if (fork() == 0) // if inside the child process
-        {
-            exit(execvp(eachCommand[0], eachCommand));
-        }
-        wait(NULL);
-    }
-
-    fclose(sourceFile);
-
-    return 0;
-}
-
 int main(int argc, char *argv[], char* envp[]) {
     // argc - argument count
-    // argv - argument vector
-    // envp - environment pointer
+    // argv - argument vector 
+    // envp - environment pointer 
     // TODO: Should roshell inherit envp from parent shells?
 
     // print out all the environment variables
@@ -69,7 +31,7 @@ int main(int argc, char *argv[], char* envp[]) {
 
         // taken from: https://danrl.com/blog/2018/how-to-write-a-tiny-shell-in-c/
         // TODO: use strtok() instead
-        for (int i = 0; i < sizeof(args) && *ptr; ptr++)
+        for (int i = 0; i < sizeof(args) && *ptr; ptr++) 
         {
             if (*ptr == ' ') continue;
             if (*ptr == '\n') break;
@@ -77,18 +39,9 @@ int main(int argc, char *argv[], char* envp[]) {
             *ptr = '\0';
         }
 
-        if (strcmp(args[0], "source") == 0)
+        if (fork() == 0) // if inside the child process
         {
-            printf("source command\n");
-            sourceCommand(args);
-        }
-        else
-        {
-
-           if (fork() == 0) // if inside the child process
-           {
-               exit(execvp(args[0], args));
-           }
+            exit(execvp(args[0], args));
         }
         wait(NULL);
     }
