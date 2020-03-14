@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>roshell-graphics</name>
+  <name>roshell_graphics</name>
   <version>0.0.0</version>
   <description>The roshell-graphics package</description>
 

@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <vector>
+
 #include <Eigen/Dense>
+#include <sys/ioctl.h>
 
 namespace roshell_graphics
 {
@@ -18,6 +20,8 @@ public:
 private:
     uint8_t rgb_to_byte_(const std::vector<int>& rgb_color);
 
+    int term_height_;
+    int term_width_;
     Eigen::MatrixXf buffer_;
 };
 
