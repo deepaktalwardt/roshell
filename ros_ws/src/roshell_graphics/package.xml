@@ -2,7 +2,7 @@
 <package format="2">
   <name>roshell_graphics</name>
   <version>0.0.0</version>
-  <description>The roshell-graphics package</description>
+  <description>The roshell_graphics package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -54,6 +54,8 @@
 
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
+
+  <depend>eigen</depend>
   
   <exec_depend>roscpp</exec_depend>
   <exec_depend>rospy</exec_depend>
