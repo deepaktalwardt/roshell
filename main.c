@@ -34,6 +34,7 @@ int main(int argc, char *argv[], char* envp[]) {
             args[i] = token;
             token = strtok(NULL, " ");
         }
+        if(args[0] == NULL) continue;
 
         if (fork() == 0) // if inside the child process
         {
