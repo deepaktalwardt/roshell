@@ -23,7 +23,6 @@ int main(int argc, char *argv[], char* envp[]) {
     {
         char input[MAX_COMM_SIZE + 1] = { 0x0 };
         char* args[MAX_ARGS + 1] = { NULL };
-        char* ptr = input;
 
         printf("user@computer $:");
         fgets(input, MAX_COMM_SIZE, stdin);
