@@ -18,4 +18,5 @@ To test line drawing, simply run the test node provided with the following comma
 ```
 rosrun roshell_graphics roshell_graphics_test_node
 ```
-This will randomly draw 10 lines on the terminal one after another.
+This will randomly draw 10 lines on the terminal one after another like this.
+![](../images/line_drawing_1.gif)
