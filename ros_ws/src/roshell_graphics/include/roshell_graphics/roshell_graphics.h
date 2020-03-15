@@ -116,10 +116,6 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2)
     put_within_limits_(p1);
     put_within_limits_(p2);
 
-    std::cout << "After: " << std::endl;
-    std::cout << p1.first << ", " << p1.second << std::endl;
-    std::cout << p2.first << ", " << p2.second << std::endl;
-
     if (p1.first == p2.first)
     {
         if (p1.second < p2.second)
