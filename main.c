@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 #include <sys/wait.h>
 
 #define MAX_COMM_SIZE 255
@@ -23,8 +24,12 @@ int main(int argc, char *argv[], char* envp[]) {
     {
         char input[MAX_COMM_SIZE + 1] = { 0x0 };
         char* args[MAX_ARGS + 1] = { NULL };
+        char hostname[_SC_HOST_NAME_MAX];
+        char username[_SC_LOGIN_NAME_MAX];
+        gethostname(hostname,_SC_HOST_NAME_MAX); // system call to get the hostname
+        getlogin_r(username,_SC_LOGIN_NAME_MAX); // system call to get the username
 
-        printf("user@computer $:");
+        printf("%s@%s $:", username,hostname);
         fgets(input, MAX_COMM_SIZE, stdin);
         input[strlen(input) - 1] = '\0'; //terminate with null, rather than with \n
 
