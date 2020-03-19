@@ -15,6 +15,10 @@ int main(int argc, char *argv[], char* envp[]) {
     // TODO: Should roshell inherit envp from parent shells?
 
     // print out all the environment variables
+    char hostname[_SC_HOST_NAME_MAX];
+    char username[_SC_LOGIN_NAME_MAX];
+    gethostname(hostname,_SC_HOST_NAME_MAX); // system call to get the hostname
+    getlogin_r(username,_SC_LOGIN_NAME_MAX); // system call to get the username
     for(int i = 0; envp[i]; ++i)
     {
         printf("environment variable %d: %s \n", i, envp[i]);
@@ -24,11 +28,6 @@ int main(int argc, char *argv[], char* envp[]) {
     {
         char input[MAX_COMM_SIZE + 1] = { 0x0 };
         char* args[MAX_ARGS + 1] = { NULL };
-        char hostname[_SC_HOST_NAME_MAX];
-        char username[_SC_LOGIN_NAME_MAX];
-        gethostname(hostname,_SC_HOST_NAME_MAX); // system call to get the hostname
-        getlogin_r(username,_SC_LOGIN_NAME_MAX); // system call to get the username
-
         printf("%s@%s $:", username,hostname);
         fgets(input, MAX_COMM_SIZE, stdin);
         input[strlen(input) - 1] = '\0'; //terminate with null, rather than with \n
