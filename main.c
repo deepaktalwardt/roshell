@@ -61,21 +61,18 @@ int main(int argc, char *argv[], char* envp[]) {
     {
         char input[MAX_COMM_SIZE + 1] = { 0x0 };
         char* args[MAX_ARGS + 1] = { NULL };
-        char* ptr = input;
 
         printf("user@computer $:");
         fgets(input, MAX_COMM_SIZE, stdin);
         input[strlen(input) - 1] = '\0'; //terminate with null, rather than with \n
 
-        // taken from: https://danrl.com/blog/2018/how-to-write-a-tiny-shell-in-c/
-        // TODO: use strtok() instead
-        for (int i = 0; i < sizeof(args) && *ptr; ptr++)
+        char* token = strtok(input, " ");
+        for(int i=0; token != NULL && i<MAX_ARGS; i++) //I'm assuming we're not religious about ANSI C compatibility
         {
-            if (*ptr == ' ') continue;
-            if (*ptr == '\n') break;
-            for (args[i++] = ptr; *ptr && *ptr != ' ' && *ptr != '\n'; ptr++);
-            *ptr = '\0';
+            args[i] = token;
+            token = strtok(NULL, " ");
         }
+        if(args[0] == NULL) continue;
 
         if (strcmp(args[0], "source") == 0)
         {
