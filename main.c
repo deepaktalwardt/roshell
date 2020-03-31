@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 #include <sys/wait.h>
 #include "const.h"
 #include "variable.h"
@@ -12,6 +13,11 @@ int main(int argc, char *argv[], char* envp[]) {
     // argv - argument vector
     // envp - environment pointer
     // TODO: Should roshell inherit envp from parent shells?
+
+    char hostname[_SC_HOST_NAME_MAX];
+    char username[_SC_LOGIN_NAME_MAX];
+    gethostname(hostname,_SC_HOST_NAME_MAX); // system call to get the hostname
+    getlogin_r(username,_SC_LOGIN_NAME_MAX); // system call to get the username
 
     // print out all the environment variables
     for(int i = 0; envp[i]; ++i)
@@ -27,8 +33,8 @@ int main(int argc, char *argv[], char* envp[]) {
     while (1)
     {
         char input[MAX_COMM_SIZE + 1] = { 0x0 };
-
-        printf("user@computer $:");
+        char* args[MAX_ARGS + 1] = { NULL };
+        printf("%s@%s $:", username,hostname);
         fgets(input, MAX_COMM_SIZE, stdin);
 
         executeCommand(input);
