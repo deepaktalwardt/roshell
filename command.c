@@ -9,7 +9,7 @@
 #include "source.h"
 #include "variable.h"
 
-void executeCommand(char* input)
+int executeCommand(char* input)
 {
 
   char* args[MAX_ARGS + 1] = { NULL };
@@ -21,7 +21,7 @@ void executeCommand(char* input)
     args[i] = token;
     token = strtok(NULL, " ");
   }
-  if(args[0] == NULL) return; //empty input
+  if(args[0] == NULL) return -1; //empty input
 
   // if command includes "=" set variable with the value after "=" as sting
   if (strchr(args[0], '=') != NULL)
@@ -58,4 +58,5 @@ void executeCommand(char* input)
      }
   }
   wait(NULL);
+  return 0;
 }
