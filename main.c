@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <stdio.h>
+#include <errno.h>
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -34,16 +35,24 @@ int main(int argc, char *argv[], char* envp[]) {
         input[strlen(input) - 1] = '\0'; //terminate with null, rather than with \n
 
         char* token = strtok(input, " ");
-        for(int i=0; token != NULL && i<MAX_ARGS; i++) //I'm assuming we're not religious about ANSI C compatibility
+        for(int i=0; token != NULL && i<MAX_ARGS; i++)
         {
             args[i] = token;
             token = strtok(NULL, " ");
         }
-        if(args[0] == NULL) continue;
+        if(args[0] == NULL) continue; //empty input
 
         if (fork() == 0) // if inside the child process
         {
-            exit(execvp(args[0], args));
+            int comm_res = execvp(args[0], args);
+
+            if(comm_res == -1)  //execvp encountered error
+            {
+                printf("Command '%s' exited with the following error: %s \n", args[0], strerror(errno));  
+                exit(-1);
+            }
+            else exit(0);
+
         }
         wait(NULL);
     }
