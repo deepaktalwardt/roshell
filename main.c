@@ -33,7 +33,6 @@ int main(int argc, char *argv[], char* envp[]) {
     while (1)
     {
         char input[MAX_COMM_SIZE + 1] = { 0x0 };
-        char* args[MAX_ARGS + 1] = { NULL };
         printf("%s@%s $:", username,hostname);
         fgets(input, MAX_COMM_SIZE, stdin);
 

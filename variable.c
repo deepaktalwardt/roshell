@@ -3,10 +3,10 @@
 #include <string.h>
 
 // variable list structure
-typedef struct var_list {
+typedef struct varItem {
     char * name;
     char * value;
-    struct var_list * next;
+    struct varItem * next;
 } varList;
 
 static varList * head = NULL;
@@ -24,6 +24,11 @@ void addVariable(char* input)
     char* tokens[2] = { NULL };
     tokens[0] = strtok(input, "=");
     tokens[1] = strtok(NULL, " \n");
+
+    // exit if empty variable is passed for now
+    // improvement required to handle saving empty variable
+    if (tokens[1]==NULL) return;
+
     if (head==NULL)
     {
         head = (varList *) malloc(sizeof(varList));

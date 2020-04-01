@@ -22,8 +22,6 @@ int sourceCommand(char** input)
     sourceFile = fopen(input[1], "r");
     while(fgets(sourceLine, MAX_COMM_SIZE, sourceFile) != NULL)
     {
-        //printf("%s", sourceLine);
-
         executeCommand(sourceLine);
     }
 
