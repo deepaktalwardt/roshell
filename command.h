@@ -1,6 +1,7 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-int executeCommand(char* input);
+void executeCommand(char* input);
+int parseInput(char input[], char* tokens[], size_t max_tok);
 
 #endif //COMMAND_H

@@ -37,6 +37,6 @@ int main(int argc, char *argv[], char* envp[]) {
         fgets(input, MAX_COMM_SIZE, stdin);
 
         executeCommand(input);
-
+        
     }
 }
