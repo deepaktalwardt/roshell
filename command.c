@@ -2,10 +2,6 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
-<<<<<<< Updated upstream
-=======
-#include <string.h>
->>>>>>> Stashed changes
 #include <sys/wait.h>
 #include <unistd.h>
 #include "const.h"
@@ -16,7 +12,6 @@ void executeCommand(char* input) {
   char* args[MAX_ARGS + 1] = {NULL};
   input[strlen(input) - 1] = '\0';  // terminate with null, rather than with \n
 
-<<<<<<< Updated upstream
   char* args[MAX_ARGS + 1] = { NULL };
   input[strlen(input) - 1] = '\0'; //terminate with null, rather than with \n
 
@@ -27,14 +22,6 @@ void executeCommand(char* input) {
       token = strtok(NULL, " ");
   }
   if(args[0] == NULL) return;
-=======
-  char* token = strtok(input, " ");
-  for (int i = 0; token != NULL && i < MAX_ARGS; ++i) {
-    args[i] = token;
-    token = strtok(NULL, " ");
-  }
-  if (args[0] == NULL) return;  // empty input
->>>>>>> Stashed changes
 
   // if command includes "=" set variable with the value after "=" as sting
   if (strchr(args[0], '=') != NULL) {
@@ -55,21 +42,10 @@ void executeCommand(char* input) {
     {
       int comm_res = execvp(args[0], args);
 
-<<<<<<< Updated upstream
      if (fork() == 0) // if inside the child process
      {
          exit(execvp(args[0], args));
      }
-=======
-      if (comm_res == -1)  // execvp encountered error
-      {
-        printf("Command '%s' exited with the following error: %s \n", args[0],
-               strerror(errno));
-        exit(-1);
-      } else
-        exit(0);
-    }
->>>>>>> Stashed changes
   }
   wait(NULL);
 }
