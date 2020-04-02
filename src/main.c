@@ -36,7 +36,7 @@ int main(int argc, char *argv[], char* envp[]) {
         printf("%s@%s $:", username,hostname);
         fgets(input, MAX_COMM_SIZE, stdin);
 
-        executeCommand(input);
+        executeLine(input);
         
     }
 }

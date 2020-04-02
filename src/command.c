@@ -30,17 +30,32 @@ int parseInput(char input[], char* tokens[], size_t max_tok)
   return n;
 }
 
-void executeCommand(char* input)
+void executeProgram(char* tokens[])
 {
+  if (fork() == 0) // if inside the child process
+  {
+    int comm_res = execvp(tokens[0], tokens);
 
-  // if command includes "=" set variable with the value after "=" as sting
-  
-  //array to which we'll write tokens
-  char* tokens[MAX_ARGS + 1] = { NULL }; 
+    if(comm_res == -1)  //execvp encountered error
+    {
+        printf("Command '%s' exited with the following error: %s \n", tokens[0], strerror(errno));  
+        exit(-1);
+    }
+    else exit(0);
+  }
+}
+
+void executeLine(char* input)
+{
+  // execute line (either a program call or a shell command)
+
+  char* tokens[MAX_ARGS + 1] = { NULL };   // array to which we'll write tokens
   parseInput(input, tokens, 10);
 
   char* command = tokens[0];
 
+  // try executing input as a shell commands
+  // if command includes "=" set variable with the value after "=" as sting
   if (strchr(command, '=') != NULL)
   {
       //printf("variable set, %s\n", command);
@@ -57,22 +72,12 @@ void executeCommand(char* input)
   else if (strcmp(command, "source") == 0) // source command
   {
       printf("source command\n");
-      sourceCommand(tokens);
+      sourceCommand(&input);
   }
-  else
+  else // if the program is not a shell command, try executing as a program.
   {
-
-     if (fork() == 0) // if inside the child process
-     {
-        int comm_res = execvp(command, tokens);
-
-        if(comm_res == -1)  //execvp encountered error
-        {
-            printf("Command '%s' exited with the following error: %s \n", command, strerror(errno));  
-            exit(-1);
-        }
-        else exit(0);
-     }
+      executeProgram(tokens);
   }
   wait(NULL);
+
 }
