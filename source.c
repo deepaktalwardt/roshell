@@ -1,11 +1,11 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <sys/wait.h>
 #include "source.h"
-#include "const.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/wait.h>
+#include <unistd.h>
 #include "command.h"
+#include "const.h"
 
 //------------------------------------------------------------------------------
 //  sourceCommand()
@@ -14,18 +14,21 @@
 //  Improvement is needed to support shell scripting
 //
 //------------------------------------------------------------------------------
-int sourceCommand(char** input)
-{
-    FILE  *sourceFile;
-    char sourceLine[MAX_COMM_SIZE+1] = {0x0};
+int sourceCommand(char** input) {
+  FILE* sourceFile;
+  char sourceLine[MAX_COMM_SIZE + 1] = {0x0};
 
-    sourceFile = fopen(input[1], "r");
-    while(fgets(sourceLine, MAX_COMM_SIZE, sourceFile) != NULL)
-    {
-        executeCommand(sourceLine);
-    }
+  sourceFile = fopen(input[1], "r");
+  if (!sourceFile) {
+    printf("File cannot open or does not exist, %s\n", input[1]);
+    return -1;
+  }
 
-    fclose(sourceFile);
+  while (fgets(sourceLine, MAX_COMM_SIZE, sourceFile) != NULL) {
+    executeCommand(sourceLine);
+  }
 
-    return 0;
+  fclose(sourceFile);
+
+  return 0;
 }
