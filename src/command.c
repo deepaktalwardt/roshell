@@ -49,6 +49,7 @@ void executeLine(char* input)
 
 int parseInput(char input[], char* tokens[], size_t max_tok)
 {
+  // original parsing from: https://danrl.com/blog/2018/how-to-write-a-tiny-shell-in-c/
   // takes raw input as a char array e.g. "ssh user@localhost -p 2222"
   // writes the output to a token array, e.g. {"ssh", "user@localhost", "-p", "2222"}
   // return the number of tokens written
