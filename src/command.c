@@ -9,45 +9,9 @@
 #include "source.h"
 #include "variable.h"
 
-int parseInput(char input[], char* tokens[], size_t max_tok)
-{
-  // takes raw input as a char array e.g. "ssh user@localhost -p 2222"
-  // writes the output to a token array, e.g. {"ssh", "user@localhost", "-p", "2222"}
-  // return the number of tokens written
-
-  input[strlen(input) - 1] = '\0'; //terminate with null, rather than with \n
-  
-  char* token = strtok(input, " ");
-  int n=0;
-
-  for(; token != NULL && n<max_tok; ++n)
-  {
-    tokens[n] = token;
-    token = strtok(NULL, " ");
-  }
-  if(tokens[0] == NULL) return -1; //empty input
-
-  return n;
-}
-
-void executeProgram(char* tokens[])
-{
-  if (fork() == 0) // if inside the child process
-  {
-    int comm_res = execvp(tokens[0], tokens);
-
-    if(comm_res == -1)  //execvp encountered error
-    {
-        printf("Command '%s' exited with the following error: %s \n", tokens[0], strerror(errno));  
-        exit(-1);
-    }
-    else exit(0);
-  }
-}
-
 void executeLine(char* input)
 {
-  // execute line (either a program call or a shell command)
+  // executes a line (which can be either a program call or a shell command)
 
   char* tokens[MAX_ARGS + 1] = { NULL };   // array to which we'll write tokens
   parseInput(input, tokens, 10);
@@ -80,4 +44,42 @@ void executeLine(char* input)
   }
   wait(NULL);
 
+}
+
+
+int parseInput(char input[], char* tokens[], size_t max_tok)
+{
+  // takes raw input as a char array e.g. "ssh user@localhost -p 2222"
+  // writes the output to a token array, e.g. {"ssh", "user@localhost", "-p", "2222"}
+  // return the number of tokens written
+
+  input[strlen(input) - 1] = '\0'; //terminate with null, rather than with \n
+  
+  char* token = strtok(input, " ");
+  int n=0;
+
+  for(; token != NULL && n<max_tok; ++n)
+  {
+    tokens[n] = token;
+    token = strtok(NULL, " ");
+  }
+  if(tokens[0] == NULL) return -1; //empty input
+
+  return n;
+}
+
+void executeProgram(char* tokens[])
+{
+    // executes program (such as /bin/ls, /usr/bin/git, etc. as a child process)
+  if (fork() == 0) // if inside the child process
+  {
+    int comm_res = execvp(tokens[0], tokens);
+
+    if(comm_res == -1)  //execvp encountered error
+    {
+        printf("Command '%s' exited with the following error: %s \n", tokens[0], strerror(errno));  
+        exit(-1);
+    }
+    else exit(0);
+  }
 }
