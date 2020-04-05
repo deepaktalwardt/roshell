@@ -14,7 +14,7 @@ void executeLine(char* input)
   // executes a line (which can be either a program call or a shell command)
 
   char* tokens[MAX_ARGS + 1] = { NULL };   // array to which we'll write tokens
-  parseInput(input, tokens, 10);
+  parseInput(input, tokens, MAX_TOK);
 
   char* command = tokens[0];
 
