@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <sys/wait.h>
 #include "command.h"
 #include "const.h"
@@ -13,14 +14,14 @@ void executeCommand(char* input)
 
   char* args[MAX_ARGS + 1] = { NULL };
   input[strlen(input) - 1] = '\0'; //terminate with null, rather than with \n
-
+  
   char* token = strtok(input, " ");
-  for(int i=0; token != NULL && i<MAX_ARGS; i++) //I'm assuming we're not religious about ANSI C compatibility
+  for(int i=0; token != NULL && i<MAX_ARGS; ++i)
   {
-      args[i] = token;
-      token = strtok(NULL, " ");
+    args[i] = token;
+    token = strtok(NULL, " ");
   }
-  if(args[0] == NULL) return;
+  if(args[0] == NULL) return; //empty input
 
   // if command includes "=" set variable with the value after "=" as sting
   if (strchr(args[0], '=') != NULL)
@@ -46,7 +47,14 @@ void executeCommand(char* input)
 
      if (fork() == 0) // if inside the child process
      {
-         exit(execvp(args[0], args));
+        int comm_res = execvp(args[0], args);
+
+        if(comm_res == -1)  //execvp encountered error
+        {
+            printf("Command '%s' exited with the following error: %s \n", args[0], strerror(errno));  
+            exit(-1);
+        }
+        else exit(0);
      }
   }
   wait(NULL);
