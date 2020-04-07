@@ -67,6 +67,8 @@ void addVariable(char* input) {
   // copy variable value
   ptr->value = (char*)malloc(strlen(tokens[1]) + 1);
   strcpy(ptr->value, tokens[1]);
+
+  free(input_copy);
 }
 
 //------------------------------------------------------------------------------
