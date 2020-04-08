@@ -4,14 +4,32 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <sys/wait.h>
+#include <signal.h>
 #include "command.h"
 #include "const.h"
 #include "source.h"
 #include "variable.h"
+//Global variable for mainting the process id used for Ctrl+c functionality
+pid_t pid,main_process;
+/*
+Interrupt signal handler that tests for the child process in the if statement
+Else it kill the whole program.
+*/
+void sigint_handler(int sig){
+    if(pid!=main_process){
+    kill(pid,SIGQUIT);
+    pid=main_process;
+    }
+    else{
+        printf("\n");
+        exit(0);
+    }
+}
 
 void executeCommand(char* input)
 {
-
+  main_process=pid=getpid(); //Make the current process id same as the main process id
+  signal(SIGINT,sigint_handler); //Signal handler that uses the above interrupt handler function
   char* args[MAX_ARGS + 1] = { NULL };
   input[strlen(input) - 1] = '\0'; //terminate with null, rather than with \n
   
@@ -41,6 +59,21 @@ void executeCommand(char* input)
   {
       printf("source command\n");
       sourceCommand(args);
+  }
+  /* 
+  Creates a child process that executes a function such as quick ssh or some roshell graphics
+  Tried this way, if you have anything better please suggest.
+  */
+  else if (strcmp(args[0], "test") == 0) // test command
+  {
+      printf("test command\n");
+      pid=fork();
+      if(pid==0)
+      {
+          pid=getpid(); // Update the current process id with the id of this child
+          sleep(10000); // A dummy sleep() call. You can call a function here.
+      }
+      wait(NULL);
   }
   else
   {
