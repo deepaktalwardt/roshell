@@ -14,11 +14,16 @@ void executeCommand(char* input)
 
   char* args[MAX_ARGS + 1] = { NULL };
   input[strlen(input) - 1] = '\0'; //terminate with null, rather than with \n
-  
+
   char* token = strtok(input, " ");
   for(int i=0; token != NULL && i<MAX_ARGS; ++i)
   {
     args[i] = token;
+    // temporary change before refactoring this file in task 15
+    // if '$' is found, token is replaced with the value
+    if (token[0] == '$') {
+      args[i] = searchVariable(&token[1]);
+    }
     token = strtok(NULL, " ");
   }
   if(args[0] == NULL) return; //empty input
@@ -51,7 +56,7 @@ void executeCommand(char* input)
 
         if(comm_res == -1)  //execvp encountered error
         {
-            printf("Command '%s' exited with the following error: %s \n", args[0], strerror(errno));  
+            printf("Command '%s' exited with the following error: %s \n", args[0], strerror(errno));
             exit(-1);
         }
         else exit(0);

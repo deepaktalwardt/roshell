@@ -31,8 +31,10 @@ void addVariable(char* input) {
 
   // exit if empty variable is passed for now
   // improvement required to handle saving empty variable
-  if (tokens[1] == NULL) return;
-
+  if (tokens[1] == NULL) {
+    printf("value is empty, skip saving for now");
+    return;
+  }
   // empty list, add to head
   if (head == NULL) {
     head = (varList*)malloc(sizeof(varList));
@@ -116,18 +118,19 @@ char* searchVariable(char* var) {
     } while (ptr->next != NULL);
 
     // variable not found
+    printf("variable not found\n");
     return NULL;
   }
 }
 
 //------------------------------------------------------------------------------
-//  searchVariable()
+//  removeVariable()
 //
-//  Function: Search a variable by scanning the list
-//  Output: variable value string or NULL if not found
+//  Function: Remove variable for "unset" command support
 //
 //------------------------------------------------------------------------------
 void removeVariable(char* var) {
+  /*  currently not funcitonal/required until "unset" command added
   varList* ptr = head;
   if (ptr == NULL) {
     printf("Empty List\n");
@@ -142,4 +145,5 @@ void removeVariable(char* var) {
       ptr = ptr->next;
     } while (ptr->next != NULL);
   }
+  */
 }
