@@ -33,7 +33,7 @@ int main(int argc, char *argv[], char* envp[]) {
     while (1)
     {
         char input[MAX_COMM_SIZE + 1] = { 0x0 };
-        printf("%s@%s $:", username,hostname);
+        printf("[roshell] %s@%s:$ ", username, hostname);
         fgets(input, MAX_COMM_SIZE, stdin);
 
         executeLine(input);
