@@ -39,7 +39,7 @@ int sourceCommand(char** input) {
   fseek(sourceFile, 0, SEEK_SET);
 
   while (fgets(sourceLine, MAX_COMM_SIZE, sourceFile) != NULL) {
-    executeCommand(sourceLine);
+    executeLine(sourceLine);
   }
 
   fclose(sourceFile);

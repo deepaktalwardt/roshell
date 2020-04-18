@@ -3,5 +3,7 @@
 
 void addVariable(char* input);
 void displayVariable();
+char* searchVariable(char* var);
+void removeVariable(char* var);
 
-#endif //VARIABLE_H
+#endif  // VARIABLE_H
