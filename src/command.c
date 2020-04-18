@@ -36,7 +36,7 @@ void executeLine(char* input)
   else if (strcmp(command, "source") == 0) // source command
   {
       printf("source command\n");
-      sourceCommand(&input);
+      sourceCommand(tokens);
   }
   else // if the program is not a shell command, try executing as a program.
   {
@@ -62,6 +62,10 @@ int parseInput(char input[], char* tokens[], size_t max_tok)
   for(; token != NULL && n<max_tok; ++n)
   {
     tokens[n] = token;
+    // if '$' is found, token is replaced with the value
+    if (tokens[n][0] == '$') {
+      tokens[n] = searchVariable(&tokens[n][1]);
+    }
     token = strtok(NULL, " ");
   }
   if(tokens[0] == NULL) return -1; //empty input
