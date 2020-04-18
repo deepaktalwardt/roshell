@@ -32,8 +32,11 @@ public:
 
     // Drawing related functions
     std::vector<int> line(const Point& pp1, const Point& pp2);
+    
     void draw();
     void draw_and_clear(unsigned long delay);
+    void fix_frame(Point& p);
+    void draw_frame();
 
 private:
     // Utility functions
@@ -186,6 +189,30 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2)
         }
     }
     return indices;
+}
+
+void RoshellGraphics::draw_frame()
+{
+    Point pl, pr, pt, pb;
+    pl = std::make_pair(-term_width_ / 2, 0);
+    pr = std::make_pair(term_width_ / 2, 0);
+    pt = std::make_pair(0, term_height_ / 2);
+    pb = std::make_pair(0, -term_height_ / 2);
+
+    fix_frame(pl);
+    fix_frame(pr);
+    fix_frame(pt);
+    fix_frame(pb);
+
+    line(pl, pr);
+    line(pt, pb);
+    draw();
+}
+
+void RoshellGraphics::fix_frame(Point& p)
+{
+    p.first = p.first + static_cast<int>(term_width_ / 2);
+    p.second = -p.second + static_cast<int>(term_height_ / 2);
 }
 
 /**
