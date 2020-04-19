@@ -23,5 +23,12 @@ var=1
 echo $var
 1
 ```
+## Source Command
+
+```source``` command reads a text file with multiple lines of commands.
+To test the command, source "test.sh" script file.
+```
+source test.sh
+```
 
 <hr>

@@ -15,5 +15,6 @@ echo echo "$var"
 var=6789
 echo $var
 echo
+lls
 echo for whole variable list
 echo run env command
