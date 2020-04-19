@@ -32,7 +32,7 @@ void addVariable(char* input) {
   // exit if empty variable is passed for now
   // improvement required to handle saving empty variable
   if (tokens[1] == NULL) {
-    printf("value is empty, skip saving for now");
+    printf("value is empty, skip saving for now\n");
     return;
   }
   // empty list, add to head
