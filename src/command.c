@@ -26,6 +26,17 @@ void executeLine(char* input)
       //printf("variable set, %s\n", command);
       addVariable(command);
   }
+  else if (strcmp(command, "export") == 0)
+  {
+    if (strchr(tokens[1], '=') != NULL)
+    {
+      addVariable(tokens[1]);
+    }
+  }
+  else if (strcmp(command, "cd") == 0) // exit shell
+  {
+      chdir(tokens[1]);
+  }
   else if (strcmp(command, "exit") == 0) // exit shell
   {
       exit(0);
