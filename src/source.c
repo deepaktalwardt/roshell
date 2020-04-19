@@ -7,6 +7,7 @@
 #include "command.h"
 #include "const.h"
 
+int pid = 0;
 //------------------------------------------------------------------------------
 //  sourceCommand()
 //
@@ -39,7 +40,16 @@ int sourceCommand(char** input) {
   fseek(sourceFile, 0, SEEK_SET);
 
   while (fgets(sourceLine, MAX_COMM_SIZE, sourceFile) != NULL) {
+    // In executeLine, fork duplicates file descriptor.
+    //  When execvp() exits with error, the parent process repeats executing
+    //  the rest of the script file twice.
+    //  To avoid this, file pointer is saved and closed before executeLine()
+    //  And, it is recovered after the execution. 
+    int cur_pos = ftell(sourceFile);
+    fclose(sourceFile);
     executeLine(sourceLine);
+    sourceFile = fopen(input[1], "r");
+    fseek(sourceFile, cur_pos, SEEK_SET);
   }
 
   fclose(sourceFile);
