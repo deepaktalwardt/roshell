@@ -71,8 +71,7 @@ void addVariable(char* input, int environment) {
   strcpy(ptr->value, tokens[1]);
 
   // "export" command additionally add the variable to environment variables
-  if (environment)
-  {
+  if (environment) {
     setenv(tokens[0], tokens[1], 1);
   }
 

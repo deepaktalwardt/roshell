@@ -18,11 +18,11 @@ void changeDirectory(char* input) {
   // get current directory string
   char* pwd = getcwd(NULL, 0);
   char* pwd_to_add = (char*)malloc(strlen(pwd) + 5);
-  //change format to add or replace PWD variable.
+  // change format to add or replace PWD variable.
   sprintf(pwd_to_add, "PWD=%s", pwd);
 
   addVariable(pwd_to_add, 1);
-  
+
   free(pwd);
   free(pwd_to_add);
 }
