@@ -37,7 +37,7 @@ class RoshellGraphics
  * top left corner of the terminal window. This is what is used
  * to fill in the buffer prior to drawing.
  * 
- * (0,0)   Screen reference frame
+ * (0, 0)   Screen reference frame
  *    +---------------------------------------------------> x_screen
  *    |                          
  *    |                        y_natural
@@ -47,7 +47,7 @@ class RoshellGraphics
  *    |                           |
  *    |                           |
  *    |                           +----------------> x_natural
- *    |                         (0,0)
+ *    |                         (0, 0)
  *    |
  *    |
  *    |
@@ -70,6 +70,9 @@ public:
     // Geometry functions
     std::vector<int> line(const Point& pp1, const Point& pp2, char c = ' ');
     void add_frame();
+
+    // Text functions
+    void add_text(const Point& start_point, const std::string& text, bool horizontal = true);
     
     // Public Utility functions
     void fix_frame(Point& p);
@@ -85,6 +88,7 @@ private:
     int encode_point_(const Point& p);
     Point decode_index_(const int& index);
     void put_within_limits_(Point& p);
+    bool is_within_limits_(const Point& p);
 
     // Terminal related variables
     int term_height_;
@@ -278,6 +282,44 @@ void RoshellGraphics::add_frame()
 }
 
 /**
+ * Adds text to the buffer
+ * 
+ * TODO(deepak): Fix issue where space becomes a '.' because of density
+*/
+void RoshellGraphics::add_text(const Point& start_point, const std::string& text, bool horizontal)
+{
+    Point curr_point = start_point;
+    fix_frame(curr_point);
+
+    // Ignore if starting position is off screen
+    if (!is_within_limits_(curr_point))
+    {
+        return;
+    }
+
+    for(int i = 0; i < text.size(); i++)
+    {
+        int idx = encode_point_(curr_point);
+        fill_buffer(idx, text[i]);
+        
+        if (horizontal) // iterate over cols
+        {
+            curr_point(0)++;
+        }
+        else            // iterate over rows
+        {
+            curr_point(1)++;
+        }
+
+        // Stop as soon as out of limits
+        if (!is_within_limits_(curr_point))
+        {
+            break;
+        }
+    }
+}
+
+/**
  * Converts point from natural reference frame to the screen reference frame
  * 
  * x_screen = x_natural + width / 2
@@ -362,6 +404,14 @@ void RoshellGraphics::put_within_limits_(Point& p)
 std::pair<int, int> RoshellGraphics::get_terminal_size()
 {
     return std::make_pair(term_width_, term_height_);
+}
+
+/**
+ * Returns true if point is within limits, else returns false. Point must be in Screen frame
+*/
+bool RoshellGraphics::is_within_limits_(const Point& p)
+{
+    return p(0) >= 0 && p(0) < term_width_ && p(1) >= 0 && p(1) < term_height_;
 }
 
 }  // namespace roshell_graphics

@@ -167,6 +167,16 @@ void draw_rotating_cube(
     }
 }
 
+void test_add_text(roshell_graphics::RoshellGraphics& rg, std::string text)
+{
+    roshell_graphics::Point p1, p2;
+    p1 = {0, 0};
+    p2 = {-10, 5};
+    rg.add_text(p1, text, true);
+    rg.add_text(p2, text, false);
+    rg.draw();
+}
+
 int main(int argc, char** argv)
 {   
     // RoshellGraphics object
@@ -187,7 +197,8 @@ int main(int argc, char** argv)
     // draw_lines(rg);
     // draw_3D_axis(rg, pp);
 
-    draw_rotating_cube(rg, '/');
+    // draw_rotating_cube(rg, '/');
+    test_add_text(rg, "Yay! this actually works now let's stress it! It needs to be longer than this");
 
     return 0;
 }
