@@ -26,7 +26,7 @@ int main(int argc, char *argv[], char* envp[]) {
         if (strchr(envp[i], '=') != NULL)
         {
             // add to variable list
-            addVariable(envp[i]);
+            addVariable(envp[i], 0);
         }
     }
 
@@ -37,6 +37,6 @@ int main(int argc, char *argv[], char* envp[]) {
         fgets(input, MAX_COMM_SIZE, stdin);
 
         executeLine(input);
-        
+
     }
 }

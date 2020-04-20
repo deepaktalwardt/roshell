@@ -18,7 +18,7 @@ static varList* head = NULL;
 //  To-Do: Replace existing variable if duplicate is found
 //
 //------------------------------------------------------------------------------
-void addVariable(char* input) {
+void addVariable(char* input, int environment) {
   varList* ptr = head;
   char* tokens[2] = {NULL};
 
@@ -69,6 +69,12 @@ void addVariable(char* input) {
   // copy variable value
   ptr->value = (char*)malloc(strlen(tokens[1]) + 1);
   strcpy(ptr->value, tokens[1]);
+
+  // "export" command additionally add the variable to environment variables
+  if (environment)
+  {
+    setenv(tokens[0], tokens[1], 1);
+  }
 
   free(input_copy);
 }

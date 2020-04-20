@@ -8,6 +8,7 @@
 #include "const.h"
 #include "source.h"
 #include "variable.h"
+#include "cd.h"
 
 void executeLine(char* input)
 {
@@ -23,19 +24,24 @@ void executeLine(char* input)
   // if command includes "=" set variable with the value after "=" as sting
   if (strchr(command, '=') != NULL)
   {
-      //printf("variable set, %s\n", command);
-      addVariable(command);
+      addVariable(command, 0);
   }
   else if (strcmp(command, "export") == 0)
   {
     if (strchr(tokens[1], '=') != NULL)
     {
-      addVariable(tokens[1]);
+      addVariable(tokens[1], 1);
     }
   }
   else if (strcmp(command, "cd") == 0) // exit shell
   {
-      chdir(tokens[1]);
+    changeDirectory(tokens[1]);
+    /*  chdir(tokens[1]);
+      // create copy not to corrupt input by strtok
+      char* pwd = (char*)malloc(strlen(input) + 1);
+
+      strcpy(input_copy, input);
+      addVariable("PWD", getcwd(NULL, 0));*/
   }
   else if (strcmp(command, "exit") == 0) // exit shell
   {
@@ -57,7 +63,6 @@ void executeLine(char* input)
   wait(NULL);
 
 }
-
 
 int parseInput(char input[], char* tokens[], size_t max_tok)
 {
