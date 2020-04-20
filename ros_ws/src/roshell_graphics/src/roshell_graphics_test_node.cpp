@@ -96,7 +96,8 @@ void draw_axis(
 }
 
 void draw_rotating_cube(
-    roshell_graphics::RoshellGraphics& rg)
+    roshell_graphics::RoshellGraphics& rg,
+    char c)
 {
     // Vertices for the cube
     Eigen::Matrix3Xf points_in_world_frame(3, 8);
@@ -175,20 +176,20 @@ void draw_rotating_cube(
 
         // draw_axis(rg, pp);
 
-        rg.line(p1, p2);
-        rg.line(p2, p3);
-        rg.line(p3, p4);
-        rg.line(p4, p1);
+        rg.line(p1, p2, c);
+        rg.line(p2, p3, c);
+        rg.line(p3, p4, c);
+        rg.line(p4, p1, c);
 
-        rg.line(p5, p6);
-        rg.line(p6, p7);
-        rg.line(p7, p8);
-        rg.line(p8, p5);
+        rg.line(p5, p6, c);
+        rg.line(p6, p7, c);
+        rg.line(p7, p8, c);
+        rg.line(p8, p5, c);
 
-        rg.line(p1, p5);
-        rg.line(p2, p6);
-        rg.line(p3, p7);
-        rg.line(p4, p8);
+        rg.line(p1, p5, c);
+        rg.line(p2, p6, c);
+        rg.line(p3, p7, c);
+        rg.line(p4, p8, c);
 
         rg.draw_and_clear(10e4);
     }
@@ -200,7 +201,7 @@ int main(int argc, char** argv)
     std::pair<int, int> term_size = rg.get_terminal_size();
     // draw_random_lines(rg, 10, term_size.first, term_size.second, 5e5);
 
-    draw_rotating_cube(rg);
+    draw_rotating_cube(rg, '/');
 
     return 0;
 }
