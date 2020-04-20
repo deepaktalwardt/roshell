@@ -83,9 +83,10 @@ RoshellGraphics::RoshellGraphics()
     // Count to char map
     count_to_char_map_[0] = ' ';
     count_to_char_map_[1] = '.';
-    count_to_char_map_[2] = '*';
-    count_to_char_map_[3] = 'X';
-    count_to_char_map_[4] = '&';
+    count_to_char_map_[2] = ':';
+    count_to_char_map_[3] = '*';
+    count_to_char_map_[4] = '$';
+    count_to_char_map_[5] = '%';
 }
 
 /**
@@ -272,13 +273,13 @@ void RoshellGraphics::draw()
             continue;
         }
 
-        if (buffer_count_[i] < 5)
+        if (buffer_count_[i] < 6)
         {
             buffer_[i] = count_to_char_map_[buffer_count_[i]];
         }
         else
         {
-            buffer_[i] = '#';
+            buffer_[i] = '@';
         }
     } 
 
