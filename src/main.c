@@ -30,7 +30,10 @@ int main(int argc, char* argv[], char* envp[]) {
 
   while (1) {
     char input[MAX_COMM_SIZE + 1] = {0x0};
-    printf("[roshell] %s@%s:$ ", username, hostname);
+
+    char* path = searchVariable("PWD");
+
+    printf("\033[7m [roshell] \033[36;1;1m%s@%s:\033[33;1;1m%s\033[37;1;1m\033[27m$ ", username, hostname, path);
     fgets(input, MAX_COMM_SIZE, stdin);
 
     executeLine(input);
