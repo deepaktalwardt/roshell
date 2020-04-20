@@ -176,20 +176,20 @@ void draw_rotating_cube(
 
         // draw_axis(rg, pp);
 
-        rg.line(p1, p2, c);
-        rg.line(p2, p3, c);
-        rg.line(p3, p4, c);
-        rg.line(p4, p1, c);
+        rg.line(p1, p2, '&'); // example
+        rg.line(p2, p3);
+        rg.line(p3, p4);
+        rg.line(p4, p1);
 
-        rg.line(p5, p6, c);
-        rg.line(p6, p7, c);
-        rg.line(p7, p8, c);
-        rg.line(p8, p5, c);
+        rg.line(p5, p6, '&');
+        rg.line(p6, p7);
+        rg.line(p7, p8);
+        rg.line(p8, p5);
 
-        rg.line(p1, p5, c);
-        rg.line(p2, p6, c);
-        rg.line(p3, p7, c);
-        rg.line(p4, p8, c);
+        rg.line(p1, p5, '&');
+        rg.line(p2, p6);
+        rg.line(p3, p7);
+        rg.line(p4, p8);
 
         rg.draw_and_clear(10e4);
     }

@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <unordered_map>
 
 #include <stdio.h>
 #include <sys/ioctl.h>
@@ -31,13 +32,13 @@ public:
     std::pair<int, int> get_terminal_size();
 
     // Drawing related functions
-    std::vector<int> line(const Point& pp1, const Point& pp2, char c = '.');
+    std::vector<int> line(const Point& pp1, const Point& pp2, char c = ' ');
     
     void draw();
     void draw_and_clear(unsigned long delay);
     void fix_frame(Point& p);
     void draw_frame();
-    void fill_buff(const int& idx, char c = '.');
+    void fill_buff(const int& idx, char c = ' ');
 
 private:
     // Utility functions
@@ -54,6 +55,9 @@ private:
     const char* term_color_;
     
     std::string buffer_;
+    std::vector<int> buffer_count_;
+
+    std::unordered_map<int, char> count_to_char_map_;
 };
 
 /**
@@ -75,6 +79,13 @@ RoshellGraphics::RoshellGraphics()
     // TODO(deepak): Use these to add color to the points
     std::cout << "Term Type: " << term_type_ << std::endl;
     std::cout << "Term Color: " << term_color_ << std::endl;
+
+    // Count to char map
+    count_to_char_map_[0] = ' ';
+    count_to_char_map_[1] = '.';
+    count_to_char_map_[2] = '*';
+    count_to_char_map_[3] = 'X';
+    count_to_char_map_[4] = '&';
 }
 
 /**
@@ -103,12 +114,21 @@ void RoshellGraphics::update_buffer()
 */
 void RoshellGraphics::clear_buffer()
 {
-    buffer_ = std::string(term_height_ * term_width_, ' ');
+    int buffer_len = term_height_ * term_width_;
+    buffer_ = std::string(buffer_len, ' ');
+    buffer_count_ = std::vector<int>(buffer_len, 0);
 }
 
 void RoshellGraphics::fill_buff(const int& idx, char c)
 {
-    buffer_[idx] = c;
+    if (c != ' ')
+    {
+        buffer_[idx] = c;
+    }
+    else
+    {
+        buffer_count_[idx]++;
+    }
 }
 
 /**
@@ -244,6 +264,25 @@ Point RoshellGraphics::decode_index_(const int& index)
 */
 void RoshellGraphics::draw()
 {
+    int buffer_len = buffer_.size();
+    for (int i = 0; i < buffer_len; i++)
+    {
+        if (buffer_[i] != ' ')  // If buffer[i] already filled, ignore
+        {
+            continue;
+        }
+
+        if (buffer_count_[i] < 5)
+        {
+            buffer_[i] = count_to_char_map_[buffer_count_[i]];
+        }
+        else
+        {
+            buffer_[i] = '#';
+        }
+    } 
+
+    // Print the buffer onto the screen
     std::cout << buffer_ << std::endl;
 }
 
