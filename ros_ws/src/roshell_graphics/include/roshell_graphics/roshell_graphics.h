@@ -19,6 +19,37 @@ using Point = std::pair<int, int>;
 class RoshellGraphics
 {
 
+/**
+ * Definitions
+ * 
+ * Natural reference frame: In this frame, the origin is at the
+ * center of the terminal. All points provided to roshell_graphics 
+ * must be in the Natural reference frame. The functions in this
+ * library are responsible of converting them to Screen reference
+ * frame, prior to drawing.
+ * 
+ * Screen reference frame: In this frame, the origin is at the 
+ * top left corner of the terminal window. This is what is used
+ * to fill in the buffer prior to drawing.
+ * 
+ * (0,0)   Screen reference frame
+ *    +---------------------------------------------------> x_screen
+ *    |                          
+ *    |                        y_natural
+ *    |                           ^
+ *    |                           |
+ *    |                           |
+ *    |                           |
+ *    |                           |
+ *    |                           +----------------> x_natural
+ *    |                         (0,0)
+ *    |
+ *    |
+ *    |
+ *    V
+ *  y_screen
+*/
+
 public:
     // Constructors and Destructors
     RoshellGraphics();
@@ -31,32 +62,36 @@ public:
     // Terminal related functions
     std::pair<int, int> get_terminal_size();
 
-    // Drawing related functions
+    // Geometry functions
     std::vector<int> line(const Point& pp1, const Point& pp2, char c = ' ');
+    void add_frame();
     
-    void draw();
-    void draw_and_clear(unsigned long delay);
+    // Public Utility functions
     void fix_frame(Point& p);
-    void draw_frame();
     void fill_buff(const int& idx, char c = ' ');
 
+    // Drawing functions
+    void draw();
+    void draw_and_clear(unsigned long delay);
+
 private:
-    // Utility functions
+    // Private Utility functions
     uint8_t rgb_to_byte_(const std::vector<int>& rgb_color);
     int encode_point_(const Point& p);
     Point decode_index_(const int& index);
     void put_within_limits_(Point& p);
 
-    // Class variables
+    // Terminal related variables
     int term_height_;
     int term_width_;
-
     const char* term_type_;
     const char* term_color_;
     
+    // Buffer related variables
     std::string buffer_;
     std::vector<int> buffer_count_;
 
+    // Defines which characters to use for different densities
     std::unordered_map<int, char> count_to_char_map_;
 };
 
@@ -133,7 +168,7 @@ void RoshellGraphics::fill_buff(const int& idx, char c)
 }
 
 /**
- * Draws a line between two points
+ * Draws a line between two points provided in the Natural Reference frame
 */
 std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char c)
 {   
@@ -142,6 +177,9 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
     // Make copies so they can be modified
     Point p1 = pp1;
     Point p2 = pp2;
+
+    fix_frame(p1);
+    fix_frame(p2);
 
     put_within_limits_(p1);
     put_within_limits_(p2);
@@ -218,7 +256,7 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
     return indices;
 }
 
-void RoshellGraphics::draw_frame()
+void RoshellGraphics::add_frame()
 {
     Point pl, pr, pt, pb;
     pl = std::make_pair(-term_width_ / 2, 0);
@@ -226,14 +264,8 @@ void RoshellGraphics::draw_frame()
     pt = std::make_pair(0, term_height_ / 2);
     pb = std::make_pair(0, -term_height_ / 2);
 
-    fix_frame(pl);
-    fix_frame(pr);
-    fix_frame(pt);
-    fix_frame(pb);
-
     line(pl, pr);
     line(pt, pb);
-    draw();
 }
 
 void RoshellGraphics::fix_frame(Point& p)

@@ -165,14 +165,14 @@ void draw_rotating_cube(
         p8.first = points_in_image_frame(0, 7);
         p8.second = points_in_image_frame(1, 7);
 
-        rg.fix_frame(p1);
-        rg.fix_frame(p2);
-        rg.fix_frame(p3);
-        rg.fix_frame(p4);
-        rg.fix_frame(p5);
-        rg.fix_frame(p6);
-        rg.fix_frame(p7);
-        rg.fix_frame(p8);
+        // rg.fix_frame(p1);
+        // rg.fix_frame(p2);
+        // rg.fix_frame(p3);
+        // rg.fix_frame(p4);
+        // rg.fix_frame(p5);
+        // rg.fix_frame(p6);
+        // rg.fix_frame(p7);
+        // rg.fix_frame(p8);
 
         // draw_axis(rg, pp);
 
