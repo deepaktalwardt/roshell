@@ -11,10 +11,15 @@
 #include <unistd.h>
 #include <cstdlib>
 
+#include <Eigen/Dense>
+
 namespace roshell_graphics
 {
 
-using Point = std::pair<int, int>;
+/**
+ * Notation for the point (x, y), which is (col, row)!
+*/
+using Point = Eigen::Vector2i;
 
 class RoshellGraphics
 {
@@ -115,7 +120,7 @@ RoshellGraphics::RoshellGraphics()
     std::cout << "Term Type: " << term_type_ << std::endl;
     std::cout << "Term Color: " << term_color_ << std::endl;
 
-    // Count to char map
+    // Count to char density map
     count_to_char_map_[0] = ' ';
     count_to_char_map_[1] = '.';
     count_to_char_map_[2] = ':';
@@ -184,22 +189,22 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
     put_within_limits_(p1);
     put_within_limits_(p2);
 
-    if (p1.first == p2.first)
+    if (p1(0) == p2(0))
     {
-        if (p1.second < p2.second)
+        if (p1(1) < p2(1))
         {
-            for (int y = p1.second; y < p2.second; y++)
+            for (int y = p1(1); y < p2(1); y++)
             {
-                int idx = encode_point_({p1.first, y});
+                int idx = encode_point_({p1(0), y});
                 indices.push_back(idx);
                 fill_buff(idx, c);
             }
         }
         else
         {
-            for (int y = p2.second; y < p1.second; y++)
+            for (int y = p2(1); y < p1(1); y++)
             {
-                int idx = encode_point_({p1.first, y});
+                int idx = encode_point_({p1(0), y});
                 indices.push_back(idx);
                 fill_buff(idx, c);
             }
@@ -207,25 +212,25 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
     }
     else 
     {
-        float slope = static_cast<float>((static_cast<float>(p2.second) - static_cast<float>(p1.second)) / 
-            (static_cast<float>(p2.first) - static_cast<float>(p1.first)));
+        float slope = static_cast<float>((static_cast<float>(p2(1)) - static_cast<float>(p1(1))) / 
+            (static_cast<float>(p2(0)) - static_cast<float>(p1(0))));
         std::cout << slope << std::endl;
         if (abs(slope) <= 1.0)
         {
-            if (p1.first < p2.first)
+            if (p1(0) < p2(0))
             {
-                for (int x = p1.first; x < p2.first; x++)
+                for (int x = p1(0); x < p2(0); x++)
                 {
-                    int idx = encode_point_({x, p1.second + slope * (x - p1.first)});
+                    int idx = encode_point_({x, p1(1) + slope * (x - p1(0))});
                     indices.push_back(idx);
                     fill_buff(idx, c);
                 }
             }
             else
             {
-                for (int x = p2.first; x < p1.first; x++)
+                for (int x = p2(0); x < p1(0); x++)
                 {
-                    int idx = encode_point_({x, p1.second + slope * (x - p1.first)});
+                    int idx = encode_point_({x, p1(1) + slope * (x - p1(0))});
                     indices.push_back(idx);
                     fill_buff(idx, c);
                 }
@@ -233,20 +238,20 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
         }
         else 
         {
-            if (p1.second < p2.second)
+            if (p1(1) < p2(1))
             {
-                for (int y = p1.second; y < p2.second; y++)
+                for (int y = p1(1); y < p2(1); y++)
                 {
-                    int idx = encode_point_({p1.first + (y - p1.second) / slope, y});
+                    int idx = encode_point_({p1(0) + (y - p1(1)) / slope, y});
                     indices.push_back(idx);
                     fill_buff(idx, c);
                 }
             }
             else
             {
-                for (int y = p2.second; y < p1.second; y++)
+                for (int y = p2(1); y < p1(1); y++)
                 {
-                    int idx = encode_point_({p1.first + (y - p1.second) / slope, y});
+                    int idx = encode_point_({p1(0) + (y - p1(1)) / slope, y});
                     indices.push_back(idx);
                     fill_buff(idx, c);
                 }
@@ -259,27 +264,34 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
 void RoshellGraphics::add_frame()
 {
     Point pl, pr, pt, pb;
-    pl = std::make_pair(-term_width_ / 2, 0);
-    pr = std::make_pair(term_width_ / 2, 0);
-    pt = std::make_pair(0, term_height_ / 2);
-    pb = std::make_pair(0, -term_height_ / 2);
+
+    pl = Point(-term_width_ / 2, 0);
+    pr = Point(term_width_ / 2, 0);
+    pt = Point(0, term_height_ / 2);
+    pb = Point(0, -term_height_ / 2);
 
     line(pl, pr);
     line(pt, pb);
 }
 
+/**
+ * Converts point from natural reference frame to the screen reference frame
+ * 
+ * x_screen = x_natural + width / 2
+ * y_screen = -y_natural + height / 2
+*/
 void RoshellGraphics::fix_frame(Point& p)
 {
-    p.first = p.first + static_cast<int>(term_width_ / 2);
-    p.second = -p.second + static_cast<int>(term_height_ / 2);
+    p(0) = p(0) + static_cast<int>(term_width_ / 2);
+    p(1) = -p(1) + static_cast<int>(term_height_ / 2);
 }
 
 /**
- * Encode (i, j) into an index location
+ * Encode (col, row) into an index location
 */
 int RoshellGraphics::encode_point_(const Point& p)
 {
-    return p.second * term_width_ + p.first;
+    return p(1) * term_width_ + p(0);
 }
 
 
@@ -288,7 +300,7 @@ int RoshellGraphics::encode_point_(const Point& p)
 */
 Point RoshellGraphics::decode_index_(const int& index)
 {
-    return std::make_pair(static_cast<int>(index % term_width_), static_cast<int>(index / term_width_));
+    return Point(static_cast<int>(index % term_width_), static_cast<int>(index / term_width_));
 }
 
 
@@ -334,11 +346,11 @@ void RoshellGraphics::draw_and_clear(unsigned long delay)
 */
 void RoshellGraphics::put_within_limits_(Point& p)
 {
-    p.first = std::max(p.first, 0);
-    p.first = std::min(p.first, term_width_);
+    p(0) = std::max(p(0), 0);
+    p(0) = std::min(p(0), term_width_);
 
-    p.second = std::max(p.second, 0);
-    p.second = std::min(p.second, term_height_);
+    p(1) = std::max(p(1), 0);
+    p(1) = std::min(p(1), term_height_);
 }
 
 /**
