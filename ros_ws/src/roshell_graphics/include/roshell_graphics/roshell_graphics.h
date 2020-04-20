@@ -73,7 +73,7 @@ public:
     
     // Public Utility functions
     void fix_frame(Point& p);
-    void fill_buff(const int& idx, char c = ' ');
+    void fill_buffer(const int& idx, char c = ' ');
 
     // Drawing functions
     void draw();
@@ -160,7 +160,7 @@ void RoshellGraphics::clear_buffer()
     buffer_count_ = std::vector<int>(buffer_len, 0);
 }
 
-void RoshellGraphics::fill_buff(const int& idx, char c)
+void RoshellGraphics::fill_buffer(const int& idx, char c)
 {
     if (c != ' ')
     {
@@ -197,7 +197,7 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
             {
                 int idx = encode_point_({p1(0), y});
                 indices.push_back(idx);
-                fill_buff(idx, c);
+                fill_buffer(idx, c);
             }
         }
         else
@@ -206,7 +206,7 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
             {
                 int idx = encode_point_({p1(0), y});
                 indices.push_back(idx);
-                fill_buff(idx, c);
+                fill_buffer(idx, c);
             }
         }
     }
@@ -223,7 +223,7 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
                 {
                     int idx = encode_point_({x, p1(1) + slope * (x - p1(0))});
                     indices.push_back(idx);
-                    fill_buff(idx, c);
+                    fill_buffer(idx, c);
                 }
             }
             else
@@ -232,7 +232,7 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
                 {
                     int idx = encode_point_({x, p1(1) + slope * (x - p1(0))});
                     indices.push_back(idx);
-                    fill_buff(idx, c);
+                    fill_buffer(idx, c);
                 }
             }
         }
@@ -244,7 +244,7 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
                 {
                     int idx = encode_point_({p1(0) + (y - p1(1)) / slope, y});
                     indices.push_back(idx);
-                    fill_buff(idx, c);
+                    fill_buffer(idx, c);
                 }
             }
             else
@@ -253,7 +253,7 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
                 {
                     int idx = encode_point_({p1(0) + (y - p1(1)) / slope, y});
                     indices.push_back(idx);
-                    fill_buff(idx, c);
+                    fill_buffer(idx, c);
                 }
             }
         }
@@ -261,6 +261,9 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
     return indices;
 }
 
+/**
+ * Adds a 2D Natural frame to the buffer, helps with debugging
+*/
 void RoshellGraphics::add_frame()
 {
     Point pl, pr, pt, pb;
