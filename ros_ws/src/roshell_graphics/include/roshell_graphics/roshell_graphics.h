@@ -68,7 +68,7 @@ public:
     std::pair<int, int> get_terminal_size();
 
     // Geometry functions
-    std::vector<int> line(const Point& pp1, const Point& pp2, char c = ' ');
+    void line(const Point& pp1, const Point& pp2, char c = ' ');
     void add_frame();
 
     // Text functions
@@ -77,6 +77,8 @@ public:
     // Public Utility functions
     void fix_frame(Point& p);
     void fill_buffer(const int& idx, char c = ' ');
+    // Overloaded function that takes point in screen frame
+    void fill_buffer(const Point& p, char c = ' ');
 
     // Drawing functions
     void draw();
@@ -164,6 +166,9 @@ void RoshellGraphics::clear_buffer()
     buffer_count_ = std::vector<int>(buffer_len, 0);
 }
 
+/**
+ * Fill buffer given encoded index and a character (optional)
+*/
 void RoshellGraphics::fill_buffer(const int& idx, char c)
 {
     if (c != ' ')
@@ -177,12 +182,23 @@ void RoshellGraphics::fill_buffer(const int& idx, char c)
 }
 
 /**
+ * Overloaded method that takes in a Point in screen coordinates to fill the buffer
+ * if in bounds.
+*/
+void RoshellGraphics::fill_buffer(const Point& p, char c)
+{
+    if (is_within_limits_(p))
+    {
+        int idx = encode_point_(p);
+        fill_buffer(idx, c);
+    }
+}
+
+/**
  * Draws a line between two points provided in the Natural Reference frame
 */
-std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char c)
+void RoshellGraphics::line(const Point& pp1, const Point& pp2, char c)
 {   
-    std::vector<int> indices;
-    
     // Make copies so they can be modified
     Point p1 = pp1;
     Point p2 = pp2;
@@ -199,18 +215,16 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
         {
             for (int y = p1(1); y < p2(1); y++)
             {
-                int idx = encode_point_({p1(0), y});
-                indices.push_back(idx);
-                fill_buffer(idx, c);
+                Point p = {p1(0), y};
+                fill_buffer(p, c);
             }
         }
         else
         {
             for (int y = p2(1); y < p1(1); y++)
             {
-                int idx = encode_point_({p1(0), y});
-                indices.push_back(idx);
-                fill_buffer(idx, c);
+                Point p = {p1(0), y};
+                fill_buffer(p, c);
             }
         }
     }
@@ -225,18 +239,16 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
             {
                 for (int x = p1(0); x < p2(0); x++)
                 {
-                    int idx = encode_point_({x, p1(1) + slope * (x - p1(0))});
-                    indices.push_back(idx);
-                    fill_buffer(idx, c);
+                    Point p = {x, p1(1) + slope * (x - p1(0))};
+                    fill_buffer(p, c);
                 }
             }
             else
             {
                 for (int x = p2(0); x < p1(0); x++)
                 {
-                    int idx = encode_point_({x, p1(1) + slope * (x - p1(0))});
-                    indices.push_back(idx);
-                    fill_buffer(idx, c);
+                    Point p = {x, p1(1) + slope * (x - p1(0))};
+                    fill_buffer(p, c);
                 }
             }
         }
@@ -246,23 +258,20 @@ std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2, char 
             {
                 for (int y = p1(1); y < p2(1); y++)
                 {
-                    int idx = encode_point_({p1(0) + (y - p1(1)) / slope, y});
-                    indices.push_back(idx);
-                    fill_buffer(idx, c);
+                    Point p = {p1(0) + (y - p1(1)) / slope, y};
+                    fill_buffer(p, c);
                 }
             }
             else
             {
                 for (int y = p2(1); y < p1(1); y++)
                 {
-                    int idx = encode_point_({p1(0) + (y - p1(1)) / slope, y});
-                    indices.push_back(idx);
-                    fill_buffer(idx, c);
+                    Point p = {p1(0) + (y - p1(1)) / slope, y};
+                    fill_buffer(p, c);
                 }
             }
         }
     }
-    return indices;
 }
 
 /**

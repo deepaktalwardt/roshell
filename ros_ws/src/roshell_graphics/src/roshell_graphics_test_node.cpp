@@ -197,8 +197,8 @@ int main(int argc, char** argv)
     // draw_lines(rg);
     // draw_3D_axis(rg, pp);
 
-    // draw_rotating_cube(rg, '/');
-    test_add_text(rg, "Yay! this actually works now let's stress it! It needs to be longer than this");
+    draw_rotating_cube(rg, '/');
+    // test_add_text(rg, "Yay! this actually works now let's stress it! It needs to be longer than this");
 
     return 0;
 }
