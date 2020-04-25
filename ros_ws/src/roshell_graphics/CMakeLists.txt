@@ -8,11 +8,18 @@ set (CMAKE_CXX_STANDARD 11)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  pcl_ros
   roscpp
   rospy
 )
 
-# find_package(Eigen)
+find_package(Boost REQUIRED COMPONENTS
+  system
+  thread
+)
+
+find_package(Eigen)
+find_package(PCL 1.7 REQUIRED COMPONENTS common io visualization)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -109,8 +116,10 @@ catkin_package(
  CATKIN_DEPENDS
   roscpp 
   rospy
-#  DEPENDS 
-  # Eigen
+ DEPENDS 
+  Eigen
+  Boost
+  PCL
 )
 
 ###########
@@ -122,8 +131,11 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  # ${Eigen_INCLUDE_DIRS}
+  ${Eigen_INCLUDE_DIRS}
 )
+
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
@@ -151,6 +163,10 @@ add_executable(roshell_graphics_test_node
   src/roshell_graphics_test_node.cpp
 )
 
+add_executable(pcl_vis_test_node
+  src/pcl_vis_test_node.cpp
+)
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -164,7 +180,17 @@ add_dependencies(roshell_graphics_test_node
   ${catkin_EXPORTED_TARGETS}
 )
 
+add_dependencies(pcl_vis_test_node
+  ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+  ${catkin_EXPORTED_TARGETS}
+)
+
 ## Specify libraries to link a library or executable target against
+target_link_libraries(pcl_vis_test_node
+  ${Boost_LIBRARIES}
+  ${PCL_LIBRARIES}
+  ${Eigen_LIBRARIES}
+)
 
 
 #############
