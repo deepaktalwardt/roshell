@@ -70,6 +70,7 @@ public:
     // Geometry functions
     void line(const Point& pp1, const Point& pp2, char c = ' ');
     void add_frame();
+    void add_points(const Eigen::Matrix2Xf& points);
 
     // Text functions
     void add_text(const Point& start_point, const std::string& text, bool horizontal = true);
@@ -191,6 +192,19 @@ void RoshellGraphics::fill_buffer(const Point& p, char c)
     {
         int idx = encode_point_(p);
         fill_buffer(idx, c);
+    }
+}
+
+/**
+ * Adds points in natural frame to the buffer
+*/
+void RoshellGraphics::add_points(const Eigen::Matrix2Xf& points)
+{
+    for (int i = 0; i < points.cols(); i++)
+    {
+        Point p(static_cast<int>(points.col(i)[0]), static_cast<int>(points.col(i)[1]));
+        fix_frame(p);
+        fill_buffer(p);
     }
 }
 

@@ -218,12 +218,13 @@ void PerspectiveProjection::transform_multiple_world_points(
     int num_points = points_in_world_frame.cols();
 
     Eigen::Matrix4Xf points_in_world_frame_aug(4, num_points);
-    points_in_world_frame_aug.block(3, num_points, 0, 0) = points_in_world_frame;
+
+    points_in_world_frame_aug.topRows(3) = points_in_world_frame;
     points_in_world_frame_aug.row(3) = Eigen::RowVectorXf::Ones(num_points);
-    
+
     Eigen::Matrix4Xf points_in_cam_frame_aug = tf_.get_transformation_matrix() * points_in_world_frame_aug;
 
-    points_in_cam_frame = points_in_cam_frame_aug.block(3, num_points, 0, 0);
+    points_in_cam_frame = points_in_cam_frame_aug.topRows(3);
 }
 
 /**
