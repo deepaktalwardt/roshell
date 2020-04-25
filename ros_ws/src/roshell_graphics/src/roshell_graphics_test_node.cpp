@@ -21,37 +21,22 @@ void draw_random_lines(
     for (int i = 0; i < n; i++)
     {
         roshell_graphics::Point p1, p2;
-        p1.first = rand() % max_w;
-        p2.first = rand() % max_w;
+        p1(0) = rand() % max_w - (max_w / 2);
+        p2(0) = rand() % max_w - (max_w / 2);
 
-        p1.second = rand() % max_h;
-        p2.second = rand() % max_h;
+        p1(1) = rand() % max_h - (max_h / 2);
+        p2(1) = rand() % max_h - (max_h / 2);
 
         rg.line(p1, p2);
         rg.draw_and_clear(delay);
     }
 }
 
-void draw_test(
-    roshell_graphics::RoshellGraphics& rg,
-    roshell_graphics::PerspectiveProjection& pp)
-{
-    Eigen::Vector3f origin_world(10, 0, 0);
-    Eigen::Vector3f origin_world_in_cam_frame =
-        pp.transform_world_point(origin_world);
-
-    std::cout << "origin_world_in_cam_frame " << std::endl <<
-        origin_world_in_cam_frame << std::endl;
-    
-    Eigen::Vector2f origin_world_in_image_frame =
-        pp.project_cam_point(origin_world_in_cam_frame);
-    
-    std::cout << "origin_world_in_image_frame " << std::endl <<
-        origin_world_in_image_frame << std::endl;
-    
-}
-
-void draw_axis(
+/**
+ * Draws 3D coordinate axis to confirm that pixel projection is working
+ * as expected.
+*/
+void draw_3D_axis(
     roshell_graphics::RoshellGraphics& rg,
     roshell_graphics::PerspectiveProjection& pp)
 {
@@ -71,32 +56,31 @@ void draw_axis(
 
     roshell_graphics::Point p1, p2, p3, p4;
 
-    p1.first = points_in_image_frame(0, 0);
-    p1.second = points_in_image_frame(1, 0);
+    p1(0) = points_in_image_frame(0, 0);
+    p1(1) = points_in_image_frame(1, 0);
 
-    p2.first = points_in_image_frame(0, 1);
-    p2.second = points_in_image_frame(1, 1);
+    p2(0) = points_in_image_frame(0, 1);
+    p2(1) = points_in_image_frame(1, 1);
 
-    p3.first = points_in_image_frame(0, 2);
-    p3.second = points_in_image_frame(1, 2);
+    p3(0) = points_in_image_frame(0, 2);
+    p3(1) = points_in_image_frame(1, 2);
 
-    p4.first = points_in_image_frame(0, 3);
-    p4.second = points_in_image_frame(1, 3);
-
-    rg.fix_frame(p1);
-    rg.fix_frame(p2);
-    rg.fix_frame(p3);
-    rg.fix_frame(p4);
+    p4(0) = points_in_image_frame(0, 3);
+    p4(1) = points_in_image_frame(1, 3);
 
     rg.line(p1, p2);
     rg.line(p1, p3);
     rg.line(p1, p4);
 
-    rg.draw();
+    // rg.draw();
 }
 
+/**
+ * Creates a 3D cube and rotates a camera around it.
+*/
 void draw_rotating_cube(
-    roshell_graphics::RoshellGraphics& rg)
+    roshell_graphics::RoshellGraphics& rg,
+    char c)
 {
     // Vertices for the cube
     Eigen::Matrix3Xf points_in_world_frame(3, 8);
@@ -140,67 +124,81 @@ void draw_rotating_cube(
         }
 
         roshell_graphics::Point p1, p2, p3, p4, p5, p6, p7, p8;
-        p1.first = points_in_image_frame(0, 0);
-        p1.second = points_in_image_frame(1, 0);
+        p1(0) = points_in_image_frame(0, 0);
+        p1(1) = points_in_image_frame(1, 0);
 
-        p2.first = points_in_image_frame(0, 1);
-        p2.second = points_in_image_frame(1, 1);
+        p2(0) = points_in_image_frame(0, 1);
+        p2(1) = points_in_image_frame(1, 1);
 
-        p3.first = points_in_image_frame(0, 2);
-        p3.second = points_in_image_frame(1, 2);
+        p3(0) = points_in_image_frame(0, 2);
+        p3(1) = points_in_image_frame(1, 2);
 
-        p4.first = points_in_image_frame(0, 3);
-        p4.second = points_in_image_frame(1, 3);
+        p4(0) = points_in_image_frame(0, 3);
+        p4(1) = points_in_image_frame(1, 3);
 
-        p5.first = points_in_image_frame(0, 4);
-        p5.second = points_in_image_frame(1, 4);
+        p5(0) = points_in_image_frame(0, 4);
+        p5(1) = points_in_image_frame(1, 4);
 
-        p6.first = points_in_image_frame(0, 5);
-        p6.second = points_in_image_frame(1, 5);
+        p6(0) = points_in_image_frame(0, 5);
+        p6(1) = points_in_image_frame(1, 5);
 
-        p7.first = points_in_image_frame(0, 6);
-        p7.second = points_in_image_frame(1, 6);
+        p7(0) = points_in_image_frame(0, 6);
+        p7(1) = points_in_image_frame(1, 6);
 
-        p8.first = points_in_image_frame(0, 7);
-        p8.second = points_in_image_frame(1, 7);
+        p8(0) = points_in_image_frame(0, 7);
+        p8(1) = points_in_image_frame(1, 7);
 
-        rg.fix_frame(p1);
-        rg.fix_frame(p2);
-        rg.fix_frame(p3);
-        rg.fix_frame(p4);
-        rg.fix_frame(p5);
-        rg.fix_frame(p6);
-        rg.fix_frame(p7);
-        rg.fix_frame(p8);
+        rg.line(p1, p2, '&'); // example
+        rg.line(p2, p3, c);
+        rg.line(p3, p4, c);
+        rg.line(p4, p1, c);
 
-        // draw_axis(rg, pp);
+        rg.line(p5, p6, 'G');
+        rg.line(p6, p7, c);
+        rg.line(p7, p8, c);
+        rg.line(p8, p5, c);
 
-        rg.line(p1, p2);
-        rg.line(p2, p3);
-        rg.line(p3, p4);
-        rg.line(p4, p1);
-
-        rg.line(p5, p6);
-        rg.line(p6, p7);
-        rg.line(p7, p8);
-        rg.line(p8, p5);
-
-        rg.line(p1, p5);
-        rg.line(p2, p6);
-        rg.line(p3, p7);
-        rg.line(p4, p8);
+        rg.line(p1, p5, 'M');
+        rg.line(p2, p6, c);
+        rg.line(p3, p7, c);
+        rg.line(p4, p8, c);
 
         rg.draw_and_clear(10e4);
     }
 }
 
-int main(int argc, char** argv)
+void test_add_text(roshell_graphics::RoshellGraphics& rg, std::string text)
 {
-    roshell_graphics::RoshellGraphics rg;
-    std::pair<int, int> term_size = rg.get_terminal_size();
-    // draw_random_lines(rg, 10, term_size.first, term_size.second, 5e5);
+    roshell_graphics::Point p1, p2;
+    p1 = {0, 0};
+    p2 = {-10, 5};
+    rg.add_text(p1, text, true);
+    rg.add_text(p2, text, false);
+    rg.draw();
+}
 
-    draw_rotating_cube(rg);
+int main(int argc, char** argv)
+{   
+    // RoshellGraphics object
+    roshell_graphics::RoshellGraphics rg;
+
+    // PixelProjection Object
+    roshell_graphics::Camera cam;
+    Eigen::Vector3f cam_loc(10000, 10000, 10000);
+    cam.location = cam_loc;
+    cam.focal_distance = 3000;
+    roshell_graphics::PerspectiveProjection pp(cam);
+
+    /**
+     * Uncomment following lines to try these functions
+    */
+    // std::pair<int, int> term_size = rg.get_terminal_size();
+    // draw_random_lines(rg, 10, term_size.first, term_size.second, 5e5);
+    // draw_lines(rg);
+    // draw_3D_axis(rg, pp);
+
+    draw_rotating_cube(rg, '/');
+    // test_add_text(rg, "Yay! this actually works now let's stress it! It needs to be longer than this");
 
     return 0;
 }
