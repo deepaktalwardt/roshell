@@ -44,9 +44,9 @@ int main(int argc, char** argv)
 
     // PixelProjection Object
     roshell_graphics::Camera cam;
-    Eigen::Vector3f cam_loc(100, 10, 12);
+    Eigen::Vector3f cam_loc(10, 10, 10);
     cam.location = cam_loc;
-    cam.focal_distance = 1000;
+    cam.focal_distance = 400;
     roshell_graphics::PerspectiveProjection pp(cam);
 
     // Load and test a PointCloud PCD file
