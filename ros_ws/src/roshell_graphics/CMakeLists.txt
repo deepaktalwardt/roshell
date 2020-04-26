@@ -163,8 +163,8 @@ add_executable(roshell_graphics_test_node
   src/roshell_graphics_test_node.cpp
 )
 
-add_executable(pcl_vis_test_node
-  src/pcl_vis_test_node.cpp
+add_executable(pcd_visualizer_node
+  src/pcd_visualizer_node.cpp
 )
 
 add_executable(pcl2_visualizer_node
