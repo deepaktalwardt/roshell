@@ -53,7 +53,7 @@ rosbag play test_bag_filtered.bag
 In a different terminal, start the visualizer
 
 ```
-roslaunch roshell_graphics pcl2_visualizer
+roslaunch roshell_graphics pcl2_visualizer.launch
 ```
 This should now start visualizing the point clouds that are streamed from the rosbag over the default topic : `/simulator/lidar`. The window should look something like this:
 ![](images/pcl2_visualizer.gif)
