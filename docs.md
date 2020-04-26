@@ -60,5 +60,5 @@ This should now start visualizing the point clouds that are streamed from the ro
 
 This node allows for some parameters to be changed as needed. See the `ros_ws/src/roshell_graphics/launch/pcl2_visualizer.launch` file for more details. For example, to change the camera focal distance (which controls the zoom level) and input topic, you should launch the node like this 
 ```
-roslaunch roshell_graphics pcl2_visualizer cam_focal_distance:=500 in_topic:="/lidar"
+roslaunch roshell_graphics pcl2_visualizer cam_focal_distance:=500 in_topic:=/lidar
 ```
