@@ -43,7 +43,7 @@ Then, you can run the ROS nodes provided inside the packages in the `ros_ws/src`
 
 ## Point Cloud Visualization
 
-To visualize point clouds inside the terminal, you will need to launch the ROS Node `pcl2_visualizer_node` and play the rosbag provided [here](). Download it to a location and navigate there.
+To visualize point clouds inside the terminal, you will need to launch the ROS Node `pcl2_visualizer_node` and play the rosbag provided [here](https://drive.google.com/open?id=1z4M2eawrsd_YgwQ4UPVxoBvqgmICQmMB). Download it to a location and navigate there.
 
 First, play the rosbag
 ```
@@ -56,7 +56,7 @@ In a different terminal, start the visualizer
 roslaunch roshell_graphics pcl2_visualizer
 ```
 This should now start visualizing the point clouds that are streamed from the rosbag over the default topic : `/simulator/lidar`. The window should look something like this:
-![](../images/pcl2_visualizer.gif)
+![](images/pcl2_visualizer.gif)
 
 This node allows for some parameters to be changed as needed. See the `ros_ws/src/roshell_graphics/launch/pcl2_visualizer.launch` file for more details. For example, to change the camera focal distance (which controls the zoom level) and input topic, you should launch the node like this 
 ```
