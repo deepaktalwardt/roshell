@@ -184,7 +184,7 @@ add_dependencies(roshell_graphics_test_node
   ${catkin_EXPORTED_TARGETS}
 )
 
-add_dependencies(pcl_vis_test_node
+add_dependencies(pcd_visualizer_node
   ${${PROJECT_NAME}_EXPORTED_TARGETS} 
   ${catkin_EXPORTED_TARGETS}
 )
@@ -195,7 +195,7 @@ add_dependencies(pcl2_visualizer_node
 )
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(pcl_vis_test_node
+target_link_libraries(pcd_visualizer_node
   ${catkin_LIBRARIES}
   ${Boost_LIBRARIES}
   ${PCL_LIBRARIES}
