@@ -19,7 +19,7 @@ int readInput(char* input, int size, char* path_str) {
 
   struct termios old_in_t, new_in_t;
   int ch;
-  int oldf;
+  //int oldf;
   char last_input[MAX_COMM_SIZE+1] = {0x0};
   int index=0;
   int last_index=0;
