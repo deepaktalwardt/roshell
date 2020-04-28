@@ -32,7 +32,7 @@ source test.sh
 ```
 ## Auto Complete
 
-Pressing '''tab''' button support auto-complete for file name only.
+Pressing ```tab``` button support auto-complete for file name only.
 If there is no matching or multiple occurrence, nothing happens.s
 
 <hr>
