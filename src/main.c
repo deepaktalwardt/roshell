@@ -6,8 +6,8 @@
 #include <unistd.h>
 #include "command.h"
 #include "const.h"
-#include "variable.h"
 #include "input.h"
+#include "variable.h"
 
 int main(int argc, char* argv[], char* envp[]) {
   // argc - argument count
@@ -34,11 +34,13 @@ int main(int argc, char* argv[], char* envp[]) {
     char path_str[MAX_COMM_SIZE + 1] = {0x0};
 
     char* path = searchVariable("PWD");
-    //printf("\033[7m [roshell] \033[36;1;1m%s@%s:\033[33;1;1m%s\033[37;1;1m\033[27m$ ", username, hostname, path);
-    sprintf(path_str,"\033[7m [roshell] \033[36;1;1m%s@%s:\033[33;1;1m%s\033[37;1;1m\033[27m$ ", username, hostname, path);
+    sprintf(path_str,
+            "\033[7m [roshell] "
+            "\033[36;1;1m%s@%s:\033[33;1;1m%s\033[37;1;1m\033[27m$ ",
+            username, hostname, path);
     printf("%s", path_str);
-    //fgets(input, MAX_COMM_SIZE, stdin);
-    readInput(input,MAX_COMM_SIZE, path_str);
+    // fgets(input, MAX_COMM_SIZE, stdin);
+    readInput(input, MAX_COMM_SIZE, path_str);
     executeLine(input);
   }
 }
