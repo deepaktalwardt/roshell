@@ -30,5 +30,9 @@ To test the command, source "test.sh" script file.
 ```
 source test.sh
 ```
+## Auto Complete
+
+Pressing '''tab''' button support auto-complete for file name only.
+If there is no matching or multiple occurrence, nothing happens.s
 
 <hr>
