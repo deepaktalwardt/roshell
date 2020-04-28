@@ -28,7 +28,7 @@ int main(int argc, char* argv[], char* envp[]) {
       addVariable(envp[i], 0);
     }
   }
-  printf("\n%s,%s \n", username, hostname);
+
   while (1) {
     char input[MAX_COMM_SIZE + 1] = {0x0};
     char path_str[MAX_COMM_SIZE + 1] = {0x0};
@@ -39,7 +39,7 @@ int main(int argc, char* argv[], char* envp[]) {
             "\033[36;1;1m%s@%s:\033[33;1;1m%s\033[37;1;1m\033[27m$ ",
             username, hostname, path);
     printf("%s", path_str);
-    // fgets(input, MAX_COMM_SIZE, stdin);
+
     readInput(input, MAX_COMM_SIZE, path_str);
     executeLine(input);
   }
