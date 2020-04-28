@@ -19,10 +19,7 @@ int readInput(char* input, int size, char* path_str) {
 
   struct termios old_in_t, new_in_t;
   int ch;
-  //int oldf;
-  char last_input[MAX_COMM_SIZE+1] = {0x0};
   int index=0;
-  int last_index=0;
 
   // original code from https://stackoverflow.com/questions/32390617/get-keyboard-interrupt-in-c
   //   Change the input to non-cannonical mode
@@ -30,11 +27,10 @@ int readInput(char* input, int size, char* path_str) {
   // store current setting
   tcgetattr(STDIN_FILENO, &old_in_t);
   new_in_t = old_in_t;
+
   // non-canonical mode
   new_in_t.c_lflag &= ~(ICANON | ECHO);
   tcsetattr(STDIN_FILENO, TCSANOW, &new_in_t);
-  //oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-  //fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
 
   while (1) {
 
@@ -43,14 +39,7 @@ int readInput(char* input, int size, char* path_str) {
     // handle only the accepted ascii char.
     if (isalnum(ch) || (ch > 31 && ch <127) || ch == '\n') {
       input[index++] = ch;
-      last_input[last_index++] = ch;
-      last_input[last_index] = '\0';
       printf("%c", ch);
-    }
-
-    if (ch == 0x20) {
-      last_index = 0;
-      last_input[last_index] = '\0';
     }
 
     // Remove char for backspace or del (for Mac) char
@@ -59,7 +48,6 @@ int readInput(char* input, int size, char* path_str) {
 
         // remove one character in the input string
         input[--index] = '\0';
-        last_input[--last_index] = '\0';
 
         // remove one character and move curser back in stdout
         putchar('\b');
@@ -69,11 +57,16 @@ int readInput(char* input, int size, char* path_str) {
     }
 
     // For Tab, autocomplete command or file name
-    if(ch == '\t' && last_input[0] != '\0') {
+    if(ch == '\t') {
       // TODO: auto autocomplete
-      listDirectory(last_input);
+      int num_byte = findInDirectory(input);
       // Print again if multiple selections are available
-      printf("\n%s%s", path_str, input);
+      if (num_byte > 0) {
+        for (int i = num_byte ; i > 0 ; i--) {
+          putchar(input[strlen(input)-i]);
+          index++;
+        }
+      }
     }
     if(ch == '\n') break;
 
@@ -81,32 +74,55 @@ int readInput(char* input, int size, char* path_str) {
 
   // restore input flag
   tcsetattr(STDIN_FILENO, TCSANOW, &old_in_t);
-  //fcntl(STDIN_FILENO, F_SETFL, oldf);
 
   return 0;
 }
 
 
 //------------------------------------------------------------------------------
-//  readInput()
+//  findInDirectory()
 //
-//  Function: Read input in non-canonical mode to  handle it while typing
+//  Function: Search file name in current directory and update input
+//  Return: Number of bytes added to the file name in input
 //
 //------------------------------------------------------------------------------
-void listDirectory(char* input) {
+int findInDirectory(char* input) {
 
   DIR *d;
   struct dirent *dir;
-  d = opendir(".");
+  char* last_input = input;
+  char file_found[MAX_COMM_SIZE] = {0x0};
+  int num_occur = 0;
+  int added_byte = 0;
 
-  printf("\n");
+  // search the last word in input
+  for(int i=0; input[i] != '\0'; i++) {
+    if(input[i]==' ')
+    {
+    		last_input = &input[i+1];
+		}
+	}
+
+  // exit if empty string
+  if (last_input[0] == '\0') return 0;
+
+  d = opendir(".");
   if (d)
   {
     while ((dir = readdir(d)) != NULL)
     {
-      if (strstr(dir->d_name, input) != NULL)
-        printf("%s\n", dir->d_name);
+      // Find matching file name
+      if (strncmp(dir->d_name, last_input, strlen(last_input)) == 0) {
+        strncpy(file_found, dir->d_name, strlen(dir->d_name));
+        num_occur++;
+      }
+    }
+    // update input only if one occurrence
+    if (num_occur == 1) {
+      added_byte = strlen(file_found) - strlen(last_input);
+      strncpy(last_input, file_found, strlen(file_found));
     }
     closedir(d);
   }
+  return added_byte;
 }

@@ -2,6 +2,6 @@
 #define INPUT_H
 
 int readInput(char* input, int size, char* path_str);
-void listDirectory(char* input);
+int findInDirectory(char* input);
 
 #endif  // INPUT_H
