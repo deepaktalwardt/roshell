@@ -56,6 +56,45 @@ int readInput(char* input, int size, char* path_str) {
           index++;
         }
       }
+    } else if (ch == 0x1b) {  // Arrow buttons
+      // Do nothing for arrow buttons for now
+      int ch2 = getchar();
+      int ch3 = getchar();
+      int ch4, ch5, ch6;
+
+      switch (ch3) {
+        case 0x41:  // Up button
+          // TODO: support history command
+          break;
+        case 0x42:  // Down button
+          // TODO: support history command
+          break;
+        case 0x43:  // Right button
+        case 0x44:  // Left button
+          // TODO: support moving curser left or right
+          break;
+        case 0x31:  // shift arrow button
+          ch4 = getchar();
+          ch5 = getchar();
+          ch6 = getchar();
+          switch (ch6) {
+            case 0x41:  // Up button
+              // TODO: support history command
+              break;
+            case 0x42:  // Down button
+              // TODO: support history command
+              break;
+            case 0x43:  // Right button
+            case 0x44:  // Left button
+              // TODO: support moving curser left or right
+              break;
+            default:
+              printf("invalid 0x%x%x%x %x%x%x\n", ch, ch2, ch3, ch4, ch5, ch6);
+          }
+          break;
+        default:
+          printf("invalid 0x%x%x%x\n", ch, ch2, ch3);
+      }
     } else {
       input[index++] = ch;
       printf("%c", ch);
