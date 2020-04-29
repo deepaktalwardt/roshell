@@ -35,12 +35,6 @@ int readInput(char* input, int size, char* path_str) {
   while (1) {
     ch = getchar();
 
-    // handle only the accepted ascii char.
-    if (isalnum(ch) || (ch > 31 && ch < 127) || ch == '\n') {
-      input[index++] = ch;
-      printf("%c", ch);
-    }
-
     // Remove char for backspace or del (for Mac) char
     if (ch == '\b' || ch == 0x7f) {
       if (index > 0) {
@@ -52,10 +46,7 @@ int readInput(char* input, int size, char* path_str) {
         putchar(0x20);
         putchar('\b');
       }
-    }
-
-    // For Tab, autocomplete command or file name
-    if (ch == '\t') {
+    } else if (ch == '\t') {  // For Tab, autocomplete command or file name
       // TODO: auto autocomplete
       int num_byte = findInDirectory(input);
       // Print again if multiple selections are available
@@ -65,8 +56,11 @@ int readInput(char* input, int size, char* path_str) {
           index++;
         }
       }
+    } else {
+      input[index++] = ch;
+      printf("%c", ch);
+      if (ch == '\n') break;
     }
-    if (ch == '\n') break;
   }
 
   // restore input flag
