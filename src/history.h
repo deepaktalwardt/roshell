@@ -1,3 +1,22 @@
+/* Copyright (C) 1989-2003 Free Software Foundation, Inc.
+   This file contains the GNU History Library (the Library), a set of
+   routines for managing the text of previously typed lines.
+   The Library is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+   The Library is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+   The GNU General Public License is often shipped with GNU software, and
+   is generally kept in a file called COPYING or LICENSE.  If you do not
+   have a copy of the license, write to the Free Software Foundation,
+   59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+
+/* Borrowed only those functions from the readline library required for
+   the history function implementation of roshell*/
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -7,7 +26,6 @@ typedef void *histdata_t;
 typedef struct _hist_entry
 {
    char *line;
-   char *timestamp;
 } HIST_ENTRY;
 
 /* A structure used to pass the current state of the history stuff around. */
@@ -36,7 +54,7 @@ void history_set_history_state(HISTORY_STATE *);
 
 /* Free the history entry H and return any application-specific data
    associated with it. */
-histdata_t free_history_entry(HIST_ENTRY *);
+void free_history_entry(HIST_ENTRY *);
 
 /* Return the history entry which is logically at OFFSET in the history
    array.  OFFSET is relative to history_base. */
