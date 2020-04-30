@@ -27,7 +27,8 @@ class Pcl2VisualizerNode
 
         ~Pcl2VisualizerNode();
 
-        void pcl_visualizer_callback(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& in_cloud_msg);
+        void pcl_visualizer_callback(
+            const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& in_cloud_msg);
     
     private:
         std::string in_topic_;
