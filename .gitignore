@@ -61,6 +61,9 @@ roshell
 ros_ws/build/
 ros_ws/devel/
 
+build/
+devel/
+
 # VS Code
 .vscode/
 
@@ -69,3 +72,4 @@ ros_ws/devel/
 
 # Ignore .catkin_workspace
 ros_ws/.catkin_workspace
+.catkin_workspace
