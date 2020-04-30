@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="in_topic" default="/simulator/lidar"/>
+    <arg name="cam_x" default="100"/>
+    <arg name="cam_y" default="100"/>
+    <arg name="cam_z" default="100"/>
+    <arg name="cam_focal_distance" default="1000"/>
+
+    <node name="pcl2_visualizer" pkg="roshell_graphics" type="pcl2_visualizer_node" output="screen">
+        <param name="in_topic" value="$(arg in_topic)"/>
+        <param name="cam_x" value="$(arg cam_x)"/>
+        <param name="cam_y" value="$(arg cam_y)"/>
+        <param name="cam_z" value="$(arg cam_z)"/>
+        <param name="cam_focal_distance" value="$(arg cam_focal_distance)"/>
+    </node>
+
+</launch>
