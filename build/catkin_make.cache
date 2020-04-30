@@ -1,2 +1,0 @@
-
--DCATKIN_DEVEL_PREFIX=/home/deepak/Dropbox/SJSU/Semesters/Spring2020/CMPE220/Project/roshell/devel -DCMAKE_INSTALL_PREFIX=/home/deepak/Dropbox/SJSU/Semesters/Spring2020/CMPE220/Project/roshell/install -G Unix Makefiles
