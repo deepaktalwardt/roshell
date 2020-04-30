@@ -45,7 +45,7 @@ Then, you can run the ROS nodes provided inside the packages in the `ros_ws/src`
 
 To visualize point clouds inside the terminal, you will need to launch the ROS Node `pcl2_visualizer_node` and play the rosbag provided [here](https://drive.google.com/open?id=1z4M2eawrsd_YgwQ4UPVxoBvqgmICQmMB). Download it to a location and navigate there.
 
-First, play the rosbag
+First, make sure that `roscore` is running, then play the rosbag
 ```
 rosbag play test_bag_filtered.bag
 ```
@@ -62,3 +62,11 @@ This node allows for some parameters to be changed as needed. See the `ros_ws/sr
 ```
 roslaunch roshell_graphics pcl2_visualizer cam_focal_distance:=500 in_topic:=/lidar
 ```
+
+## Line Plots
+
+To create line plots, we first need to have a publisher node that will publish random values to be plot on the line plot. To do that, launch the following
+```
+roslaunch roshell_graphics float_visualizer.launch
+```
+This will start both a floating point publisher and a subscriber and start printing values to the scren.
