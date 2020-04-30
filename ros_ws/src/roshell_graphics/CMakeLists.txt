@@ -150,6 +150,10 @@ include_directories(
 add_executable(roshell_graphics_test_node
   src/roshell_graphics_test_node.cpp
 )
+add_executable(roshell_graphics_plot_node
+  src/roshell_graphics_plot_node.cpp
+)
+
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -160,6 +164,10 @@ add_executable(roshell_graphics_test_node
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(roshell_graphics_test_node
+  ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+  ${catkin_EXPORTED_TARGETS}
+)
+add_dependencies(roshell_graphics_plot_node
   ${${PROJECT_NAME}_EXPORTED_TARGETS} 
   ${catkin_EXPORTED_TARGETS}
 )

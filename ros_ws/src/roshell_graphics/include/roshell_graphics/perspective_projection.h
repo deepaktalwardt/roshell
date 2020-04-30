@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <string>
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 #include "math.h"
 
 #include "roshell_graphics.h"

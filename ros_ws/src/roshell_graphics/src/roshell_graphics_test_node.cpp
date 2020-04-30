@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 
 #include <roshell_graphics/roshell_graphics.h>
 #include <roshell_graphics/perspective_projection.h>
@@ -116,7 +116,7 @@ void draw_rotating_cube(
     Eigen::Matrix2Xf points_in_image_frame(2, 8);
 
     roshell_graphics::Camera cam;
-    Eigen::Vector3f cam_loc(8000, 10000, 5000);
+    Eigen::Vector3f cam_loc(40000, 50000, 25000);
     cam.location = cam_loc;
     cam.focal_distance = 3000;
 
@@ -198,7 +198,7 @@ int main(int argc, char** argv)
 {
     roshell_graphics::RoshellGraphics rg;
     std::pair<int, int> term_size = rg.get_terminal_size();
-    // draw_random_lines(rg, 10, term_size.first, term_size.second, 5e5);
+    //draw_random_lines(rg, 10, term_size.first, term_size.second, 5e5);
 
     draw_rotating_cube(rg);
 
