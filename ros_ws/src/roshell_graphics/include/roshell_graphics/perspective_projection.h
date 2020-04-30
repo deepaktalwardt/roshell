@@ -133,6 +133,17 @@ class PerspectiveProjection
         Eigen::Vector2f project_world_point(const Eigen::Vector3f& point_in_world_frame);
         Eigen::Vector2f project_cam_point(const Eigen::Vector3f& point_in_cam_frame);
 
+        Eigen::Matrix2Xf  project_multiple_world_points(
+            const Eigen::Matrix3Xf& points_in_world_frame);
+        
+        void transform_multiple_world_points(
+            const Eigen::Matrix3Xf& points_in_world_frame, /** input */
+            Eigen::Matrix3Xf& points_in_cam_frame);  /** output */
+        
+        void project_multiple_cam_points(
+            const Eigen::Matrix3Xf& points_in_cam_frame,
+            Eigen::Matrix2Xf& points_in_image_plane);
+
     private:
         Camera camera_;
         Transform tf_;
@@ -180,6 +191,60 @@ Eigen::Vector2f PerspectiveProjection::project_cam_point(
     return point_in_image_plane;
 }
 
+/**
+ * This function projects multiple_world_points onto the image_plane
+*/
+Eigen::Matrix2Xf PerspectiveProjection::project_multiple_world_points(
+    const Eigen::Matrix3Xf& points_in_world_frame)
+{
+    int num_points = points_in_world_frame.cols();
+    Eigen::Matrix3Xf points_in_cam_frame(3, num_points);
+    Eigen::Matrix2Xf points_in_image_plane(2, num_points);
+
+    transform_multiple_world_points(points_in_world_frame, points_in_cam_frame);
+    project_multiple_cam_points(points_in_cam_frame, points_in_image_plane);
+
+    return points_in_image_plane;
+}
+
+/**
+ * This function takes in multiple points_in_world_frame and transforms them into camera frame
+ * and populates the points_in_cam_frame matrix
+*/
+void PerspectiveProjection::transform_multiple_world_points(
+    const Eigen::Matrix3Xf& points_in_world_frame, /** input */
+    Eigen::Matrix3Xf& points_in_cam_frame)   /** output */
+{
+    int num_points = points_in_world_frame.cols();
+
+    Eigen::Matrix4Xf points_in_world_frame_aug(4, num_points);
+
+    points_in_world_frame_aug.topRows(3) = points_in_world_frame;
+    points_in_world_frame_aug.row(3) = Eigen::RowVectorXf::Ones(num_points);
+
+    Eigen::Matrix4Xf points_in_cam_frame_aug = tf_.get_transformation_matrix() * points_in_world_frame_aug;
+
+    points_in_cam_frame = points_in_cam_frame_aug.topRows(3);
+}
+
+/**
+ * This function takes multiple 3D points_in_cam_frame and projects them into
+ * the 2D image plane and populates those points in points_in_image_plane
+*/
+void PerspectiveProjection::project_multiple_cam_points(
+    const Eigen::Matrix3Xf& points_in_cam_frame,
+    Eigen::Matrix2Xf& points_in_image_plane)
+{
+    int num_points = points_in_cam_frame.cols();
+    for (int i = 0; i < num_points; i++)
+    {
+        points_in_image_plane.col(i) = project_cam_point(points_in_cam_frame.col(i));
+    }
+}
+
+/**
+ * This function updates the Transform object's camera object with the input camera
+*/
 void PerspectiveProjection::update_camera(const Camera& camera)
 {
     tf_.update(camera.location);
