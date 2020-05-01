@@ -162,10 +162,10 @@ add_definitions(${PCL_DEFINITIONS})
 add_executable(roshell_graphics_test_node
   src/roshell_graphics_test_node.cpp
 )
+
 add_executable(roshell_graphics_plot_node
   src/roshell_graphics_plot_node.cpp
 )
-
 
 add_executable(pcd_visualizer_node
   src/pcd_visualizer_node.cpp
@@ -187,6 +187,7 @@ add_dependencies(roshell_graphics_test_node
   ${${PROJECT_NAME}_EXPORTED_TARGETS} 
   ${catkin_EXPORTED_TARGETS}
 )
+
 add_dependencies(roshell_graphics_plot_node
   ${${PROJECT_NAME}_EXPORTED_TARGETS} 
   ${catkin_EXPORTED_TARGETS}

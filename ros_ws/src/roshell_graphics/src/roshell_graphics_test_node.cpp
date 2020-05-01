@@ -7,7 +7,7 @@
 #include <roshell_graphics/roshell_graphics.h>
 #include <roshell_graphics/perspective_projection.h>
 
-/**
+/**s
  * Function to test line drawing capabilities
 */
 void draw_random_lines(
@@ -181,10 +181,6 @@ int main(int argc, char** argv)
 {   
     // RoshellGraphics object
     roshell_graphics::RoshellGraphics rg;
-<<<<<<< HEAD
-    std::pair<int, int> term_size = rg.get_terminal_size();
-    //draw_random_lines(rg, 10, term_size.first, term_size.second, 5e5);
-=======
 
     // PixelProjection Object
     roshell_graphics::Camera cam;
@@ -200,9 +196,8 @@ int main(int argc, char** argv)
     // draw_random_lines(rg, 10, term_size.first, term_size.second, 5e5);
     // draw_lines(rg);
     // draw_3D_axis(rg, pp);
->>>>>>> b73603d0d9a2cba5ad952557f62db12f1ea0e282
 
-    draw_rotating_cube(rg, '/');
+    // draw_rotating_cube(rg, '/');
     // test_add_text(rg, "Yay! this actually works now let's stress it! It needs to be longer than this");
 
     return 0;

@@ -67,10 +67,6 @@ public:
     // Terminal related functions
     std::pair<int, int> get_terminal_size();
 
-<<<<<<< HEAD
-    // Drawing related functions
-    std::vector<int> line(const Point& pp1, const Point& pp2, char symbol = '.');
-=======
     // Geometry functions
     void line(const Point& pp1, const Point& pp2, char c = ' ');
     void add_frame();
@@ -78,7 +74,6 @@ public:
 
     // Text functions
     void add_text(const Point& start_point, const std::string& text, bool horizontal = true);
->>>>>>> b73603d0d9a2cba5ad952557f62db12f1ea0e282
     
     // Public Utility functions
     void fix_frame(Point& p);
@@ -203,9 +198,6 @@ void RoshellGraphics::fill_buffer(const Point& p, char c)
 /**
  * Adds points in natural frame to the buffer
 */
-<<<<<<< HEAD
-std::vector<int> RoshellGraphics::line(const Point& pp1, const Point& pp2,char symbol)
-=======
 void RoshellGraphics::add_points(const Eigen::Matrix2Xf& points)
 {
     for (int i = 0; i < points.cols(); i++)
@@ -220,7 +212,6 @@ void RoshellGraphics::add_points(const Eigen::Matrix2Xf& points)
  * Draws a line between two points provided in the Natural Reference frame
 */
 void RoshellGraphics::line(const Point& pp1, const Point& pp2, char c)
->>>>>>> b73603d0d9a2cba5ad952557f62db12f1ea0e282
 {   
     // Make copies so they can be modified
     Point p1 = pp1;
@@ -238,28 +229,16 @@ void RoshellGraphics::line(const Point& pp1, const Point& pp2, char c)
         {
             for (int y = p1(1); y < p2(1); y++)
             {
-<<<<<<< HEAD
-                int idx = encode_point_({p1.first, y});
-                indices.push_back(idx);
-                buffer_[idx] = symbol;
-=======
                 Point p = {p1(0), y};
                 fill_buffer(p, c);
->>>>>>> b73603d0d9a2cba5ad952557f62db12f1ea0e282
             }
         }
         else
         {
             for (int y = p2(1); y < p1(1); y++)
             {
-<<<<<<< HEAD
-                int idx = encode_point_({p1.first, y});
-                indices.push_back(idx);
-                buffer_[idx] = symbol;
-=======
                 Point p = {p1(0), y};
                 fill_buffer(p, c);
->>>>>>> b73603d0d9a2cba5ad952557f62db12f1ea0e282
             }
         }
     }
@@ -274,28 +253,16 @@ void RoshellGraphics::line(const Point& pp1, const Point& pp2, char c)
             {
                 for (int x = p1(0); x < p2(0); x++)
                 {
-<<<<<<< HEAD
-                    int idx = encode_point_({x, p1.second + slope * (x - p1.first)});
-                    indices.push_back(idx);
-                    buffer_[idx] = symbol;
-=======
                     Point p = {x, p1(1) + slope * (x - p1(0))};
                     fill_buffer(p, c);
->>>>>>> b73603d0d9a2cba5ad952557f62db12f1ea0e282
                 }
             }
             else
             {
                 for (int x = p2(0); x < p1(0); x++)
                 {
-<<<<<<< HEAD
-                    int idx = encode_point_({x, p1.second + slope * (x - p1.first)});
-                    indices.push_back(idx);
-                    buffer_[idx] = symbol;
-=======
                     Point p = {x, p1(1) + slope * (x - p1(0))};
                     fill_buffer(p, c);
->>>>>>> b73603d0d9a2cba5ad952557f62db12f1ea0e282
                 }
             }
         }
@@ -305,28 +272,16 @@ void RoshellGraphics::line(const Point& pp1, const Point& pp2, char c)
             {
                 for (int y = p1(1); y < p2(1); y++)
                 {
-<<<<<<< HEAD
-                    int idx = encode_point_({p1.first + (y - p1.second) / slope, y});
-                    indices.push_back(idx);
-                    buffer_[idx] = symbol;
-=======
                     Point p = {p1(0) + (y - p1(1)) / slope, y};
                     fill_buffer(p, c);
->>>>>>> b73603d0d9a2cba5ad952557f62db12f1ea0e282
                 }
             }
             else
             {
                 for (int y = p2(1); y < p1(1); y++)
                 {
-<<<<<<< HEAD
-                    int idx = encode_point_({p1.first + (y - p1.second) / slope, y});
-                    indices.push_back(idx);
-                    buffer_[idx] = symbol;
-=======
                     Point p = {p1(0) + (y - p1(1)) / slope, y};
                     fill_buffer(p, c);
->>>>>>> b73603d0d9a2cba5ad952557f62db12f1ea0e282
                 }
             }
         }
