@@ -31,8 +31,8 @@ void pcd_visualizer(
         points_in_world_frame.col(i) << points[i].x, points[i].y, points[i].z;
     }
     
-    Eigen::Matrix2Xf points_in_image_plane = pp.project_multiple_world_points(points_in_world_frame);
-    rg.add_points(points_in_image_plane);
+    Eigen::Matrix3Xf points_in_image_plane_with_z_world = pp.project_multiple_world_points_with_z_world(points_in_world_frame);
+    rg.add_points(points_in_image_plane_with_z_world);
     rg.draw();
 }
 

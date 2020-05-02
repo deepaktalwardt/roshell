@@ -73,3 +73,6 @@ devel/
 # Ignore .catkin_workspace
 ros_ws/.catkin_workspace
 .catkin_workspace
+
+# Ignore pcd files
+*.pcd
