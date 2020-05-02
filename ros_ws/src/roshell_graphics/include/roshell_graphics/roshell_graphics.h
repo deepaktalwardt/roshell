@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <cstdlib>
 
+#include <boost/algorithm/string/join.hpp>
 #include <Eigen/Dense>
 
 namespace roshell_graphics
@@ -264,19 +265,20 @@ void RoshellGraphics::add_points(const Eigen::Matrix2Xf& points)
 */
 void RoshellGraphics::add_points(const Eigen::Matrix3Xf& points)
 {
-    float min_val = points.block(0, 2, 1, points.cols()).minCoeff();
-    float max_val = points.block(0, 2, 1, points.cols()).maxCoeff();
+    float min_val = points.block(2, 0, 1, points.cols()).minCoeff();
+    float max_val = points.block(2, 0, 1, points.cols()).maxCoeff();
 
     float slope =  256.0 / (max_val - min_val);
+    int intercept = static_cast<int>(-slope * min_val);
 
     for (int i = 0; i < points.cols(); i++)
     {
         Point p(static_cast<int>(points.col(i)[0]), static_cast<int>(points.col(i)[1]));
         transform_to_screen_frame(p);
-        
-        int color_idx = static_cast<int>(slope * points.col(i)[2]);
 
+        int color_idx = static_cast<int>(slope * points.col(i)[2]) + intercept;
         fill_buffer(p, colormap_[color_idx]);
+
     }
 }
 
@@ -318,7 +320,7 @@ void RoshellGraphics::add_line(const Point& pp1, const Point& pp2, std::string c
     {
         float slope = static_cast<float>((static_cast<float>(p2(1)) - static_cast<float>(p1(1))) / 
             (static_cast<float>(p2(0)) - static_cast<float>(p1(0))));
-        std::cout << slope << std::endl;
+
         if (abs(slope) <= 1.0)
         {
             if (p1(0) < p2(0))
@@ -468,19 +470,27 @@ void RoshellGraphics::draw()
     } 
 
     std::vector<unsigned char> no_color = {0, 0, 0};
-
+    
+    // TODO(Deepak): Figure out how to make this faster
     // Print the buffer onto the screen
+    // for (int i = 0; i < buffer_len; i++)
+    // {
+    //     if (buffer_colors_[i] != no_color)
+    //     {
+    //         std::cout << convert_rgb_to_string_(buffer_colors_[i], buffer_[i]);
+    //     }
+    //     else
+    //     {
+    //         std::cout << buffer_[i];
+    //     }
+    // }
+    std::string out_buffer;
+
     for (int i = 0; i < buffer_len; i++)
     {
-        if (buffer_colors_[i] != no_color)
-        {
-            std::cout << convert_rgb_to_string_(buffer_colors_[i], buffer_[i]);
-        }
-        else
-        {
-            std::cout << buffer_[i];
-        }
+        out_buffer += convert_rgb_to_string_(buffer_colors_[i], buffer_[i]);
     }
+    std::cout << out_buffer;
 }
 
 /**

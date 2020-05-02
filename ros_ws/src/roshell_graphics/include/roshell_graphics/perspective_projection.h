@@ -222,10 +222,10 @@ Eigen::Matrix3Xf PerspectiveProjection::project_multiple_world_points_with_z_wor
     int num_points = points_in_world_frame.cols();
 
     Eigen::Matrix2Xf points_in_image_plane = project_multiple_world_points(points_in_world_frame);
-
     Eigen::Matrix3Xf points_in_image_plane_with_z_world(3, num_points);
-    points_in_image_plane_with_z_world.block(0, 0, 3, num_points) = points_in_image_plane;
-    points_in_image_plane_with_z_world.block(0, 2, 1, num_points) = points_in_world_frame.block(0, 2, 1, num_points);
+
+    points_in_image_plane_with_z_world.block(0, 0, 2, num_points) = points_in_image_plane;
+    points_in_image_plane_with_z_world.block(2, 0, 1, num_points) = points_in_world_frame.block(2, 0, 1, num_points);
 
     return points_in_image_plane_with_z_world;
 }
