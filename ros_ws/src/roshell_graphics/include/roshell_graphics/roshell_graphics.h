@@ -68,7 +68,7 @@ public:
     std::pair<int, int> get_terminal_size();
 
     // Geometry functions
-    void add_line(const Point& pp1, const Point& pp2, char c = ' ');
+    void add_line(const Point& pp1, const Point& pp2, std::string c = " ");
     void add_natural_frame();
     void add_points(const Eigen::Matrix2Xf& points);
 
@@ -77,9 +77,9 @@ public:
     
     // Public Utility functions
     void transform_to_screen_frame(Point& p);
-    void fill_buffer(const int& idx, char c = ' ');
+    void fill_buffer(const int& idx, std::string c = " ");
     // Overloaded function that takes point in screen frame
-    void fill_buffer(const Point& p, char c = ' ');
+    void fill_buffer(const Point& p, std::string c = " ");
 
     // Drawing functions
     void draw();
@@ -100,11 +100,13 @@ private:
     const char* term_color_;
     
     // Buffer related variables
-    std::string buffer_;
+    // std::string buffer_;
+    std::vector<std::string> buffer_;
     std::vector<int> buffer_count_;
+    std::vector<std::vector<int>> buffer_colors_;
 
     // Defines which characters to use for different densities
-    std::unordered_map<int, char> count_to_char_map_;
+    std::unordered_map<int, std::string> count_to_char_map_;
 };
 
 /**
@@ -128,12 +130,12 @@ RoshellGraphics::RoshellGraphics()
     std::cout << "Term Color: " << term_color_ << std::endl;
 
     // Count to char density map
-    count_to_char_map_[0] = ' ';
-    count_to_char_map_[1] = '.';
-    count_to_char_map_[2] = ':';
-    count_to_char_map_[3] = '*';
-    count_to_char_map_[4] = '$';
-    count_to_char_map_[5] = '%';
+    count_to_char_map_[0] = " ";
+    count_to_char_map_[1] = ".";
+    count_to_char_map_[2] = ":";
+    count_to_char_map_[3] = "*";
+    count_to_char_map_[4] = "$";
+    count_to_char_map_[5] = "%";
 }
 
 /**
@@ -163,16 +165,18 @@ void RoshellGraphics::update_buffer()
 void RoshellGraphics::clear_buffer()
 {
     int buffer_len = term_height_ * term_width_;
-    buffer_ = std::string(buffer_len, ' ');
+    // buffer_ = std::string(buffer_len, ' ');
+    buffer_ = std::vector<std::string>(buffer_len, " ");
     buffer_count_ = std::vector<int>(buffer_len, 0);
+    buffer_colors_ = std::vector<std::vector<int>>(buffer_len, {-1, -1, -1});
 }
 
 /**
  * Fill buffer given encoded index and a character (optional)
 */
-void RoshellGraphics::fill_buffer(const int& idx, char c)
+void RoshellGraphics::fill_buffer(const int& idx, std::string c)
 {
-    if (c != ' ')
+    if (c != " ") 
     {
         buffer_[idx] = c;
     }
@@ -186,7 +190,7 @@ void RoshellGraphics::fill_buffer(const int& idx, char c)
  * Overloaded method that takes in a Point in screen coordinates to fill the buffer
  * if in bounds.
 */
-void RoshellGraphics::fill_buffer(const Point& p, char c)
+void RoshellGraphics::fill_buffer(const Point& p, std::string c)
 {
     if (is_within_limits_(p))
     {
@@ -211,7 +215,7 @@ void RoshellGraphics::add_points(const Eigen::Matrix2Xf& points)
 /**
  * Draws a line between two points provided in the Natural Reference frame
 */
-void RoshellGraphics::add_line(const Point& pp1, const Point& pp2, char c)
+void RoshellGraphics::add_line(const Point& pp1, const Point& pp2, std::string c)
 {   
     // Make copies so they can be modified
     Point p1 = pp1;
@@ -323,7 +327,7 @@ void RoshellGraphics::add_text(const Point& start_point, const std::string& text
     for(int i = 0; i < text.size(); i++)
     {
         int idx = encode_point_(curr_point);
-        fill_buffer(idx, text[i]);
+        fill_buffer(idx, std::to_string(text[i]));
         
         if (horizontal) // iterate over cols
         {
@@ -377,10 +381,10 @@ Point RoshellGraphics::decode_index_(const int& index)
 */
 void RoshellGraphics::draw()
 {
-    int buffer_len = buffer_.size();
+    int buffer_len = term_height_ * term_width_;
     for (int i = 0; i < buffer_len; i++)
     {
-        if (buffer_[i] != ' ')  // If buffer[i] already filled, ignore
+        if (buffer_[i] != " ")  // If buffer[i] already filled, ignore
         {
             continue;
         }
@@ -391,12 +395,15 @@ void RoshellGraphics::draw()
         }
         else
         {
-            buffer_[i] = '@';
+            buffer_[i] = "@";
         }
     } 
 
     // Print the buffer onto the screen
-    std::cout << buffer_ << std::endl;
+    for (int i = 0; i < buffer_len; i++)
+    {
+        std::cout << buffer_[i];
+    }
 }
 
 /**
