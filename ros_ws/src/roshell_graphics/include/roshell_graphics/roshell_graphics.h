@@ -5,6 +5,7 @@
 #include <string>
 #include <algorithm>
 #include <unordered_map>
+#include <sstream>
 
 #include <stdio.h>
 #include <sys/ioctl.h>
@@ -130,6 +131,8 @@ RoshellGraphics::RoshellGraphics()
     term_height_ = 40; 
     term_width_ = 150;
 
+    std::ios::sync_with_stdio(false);
+
     update_buffer();
 
     std::cout << "Terminal Shape (w, h): " << term_width_ << ", " << term_height_ << std::endl;
@@ -177,10 +180,9 @@ void RoshellGraphics::update_buffer()
 void RoshellGraphics::clear_buffer()
 {
     int buffer_len = term_height_ * term_width_;
-    // buffer_ = std::string(buffer_len, ' ');
     buffer_ = std::vector<std::string>(buffer_len, " ");
     buffer_count_ = std::vector<int>(buffer_len, 0);
-    buffer_colors_ = std::vector<std::vector<unsigned char>>(buffer_len, {0, 0, 0});
+    buffer_colors_ = std::vector<std::vector<unsigned char>>(buffer_len, {255, 255, 255});
 }
 
 /**
@@ -219,11 +221,18 @@ void RoshellGraphics::fill_buffer(const Point& p, const std::vector<unsigned cha
 {
     if (is_within_limits_(p))
     {
-        // std::string color_str = convert_rgb_to_string_(color);
         int idx = encode_point_(p);
         fill_buffer(idx, c);
         fill_color(idx, color);
     }
+}
+
+/**
+ * This color fills the color buffer with the color_str at index idx
+*/
+void RoshellGraphics::fill_color(const int& idx, std::vector<unsigned char> color)
+{
+    buffer_colors_[idx] = color;
 }
 
 /**
@@ -238,14 +247,6 @@ std::string RoshellGraphics::convert_rgb_to_string_(const std::vector<unsigned c
     b = std::to_string(color[2]);
 
     return "\033[38;2;" + r + ";" + g + ";" + b + "m" + c + "\033[0m";
-}
-
-/**
- * This color fills the color buffer with the color_str at index idx
-*/
-void RoshellGraphics::fill_color(const int& idx, std::vector<unsigned char> color)
-{
-    buffer_colors_[idx] = color;
 }
 
 /**
@@ -279,7 +280,6 @@ void RoshellGraphics::add_points(const Eigen::Matrix3Xf& points)
 
         int color_idx = static_cast<int>(slope * points.col(i)[2]) + intercept;
         fill_buffer(p, colormap_[color_idx]);
-
     }
 }
 
@@ -453,10 +453,12 @@ Point RoshellGraphics::decode_index_(const int& index)
 void RoshellGraphics::draw()
 {
     int buffer_len = term_height_ * term_width_;
+    std::string out_buffer;
     for (int i = 0; i < buffer_len; i++)
     {
         if (buffer_[i] != " ")  // If buffer[i] already filled, ignore
         {
+            out_buffer += buffer_[i];
             continue;
         }
 
@@ -468,29 +470,11 @@ void RoshellGraphics::draw()
         {
             buffer_[i] = "@";
         }
-    } 
 
-    std::vector<unsigned char> no_color = {0, 0, 0};
-    
-    // TODO(Deepak): Figure out how to make this faster
-    // Print the buffer onto the screen
-    // for (int i = 0; i < buffer_len; i++)
-    // {
-    //     if (buffer_colors_[i] != no_color)
-    //     {
-    //         std::cout << convert_rgb_to_string_(buffer_colors_[i], buffer_[i]);
-    //     }
-    //     else
-    //     {
-    //         std::cout << buffer_[i];
-    //     }
-    // }
-    std::string out_buffer;
-
-    for (int i = 0; i < buffer_len; i++)
-    {
         out_buffer += convert_rgb_to_string_(buffer_colors_[i], buffer_[i]);
     }
+
+    // Stream buffer to the terminal
     std::cout << out_buffer;
 }
 

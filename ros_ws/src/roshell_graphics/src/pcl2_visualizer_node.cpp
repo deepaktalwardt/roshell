@@ -23,7 +23,8 @@ class Pcl2VisualizerNode
             const int& cam_x,
             const int& cam_y,
             const int& cam_z,
-            const int& cam_focal_distance);
+            const int& cam_focal_distance,
+            const int& subsampling);
 
         ~Pcl2VisualizerNode();
 
@@ -45,8 +46,10 @@ Pcl2VisualizerNode::Pcl2VisualizerNode(
     const int& cam_x,
     const int& cam_y,
     const int& cam_z,
-    const int& cam_focal_distance):
-    in_topic_(in_topic)
+    const int& cam_focal_distance,
+    const int& subsampling):
+    in_topic_(in_topic),
+    subsampling_(subsampling)
 {
     ros::NodeHandle nh;
 
@@ -100,7 +103,7 @@ int main(int argc, char** argv)
     ros::NodeHandle pnh("~");
 
     std::string in_topic = "";
-    int cam_x, cam_y, cam_z, cam_focal_distance;
+    int cam_x, cam_y, cam_z, cam_focal_distance, subsampling;
 
     int bad_params = 0;
 
@@ -109,6 +112,7 @@ int main(int argc, char** argv)
     bad_params += !pnh.getParam("cam_y", cam_y);
     bad_params += !pnh.getParam("cam_z", cam_z);
     bad_params += !pnh.getParam("cam_focal_distance", cam_focal_distance);
+    bad_params += !pnh.getParam("subsampling", subsampling);
 
     if (bad_params > 0)
     {
@@ -121,7 +125,8 @@ int main(int argc, char** argv)
         cam_x,
         cam_y,
         cam_z,
-        cam_focal_distance);
+        cam_focal_distance,
+        subsampling);
 
     ros::spin();
     return 0;
