@@ -36,6 +36,8 @@ class Pcl2VisualizerNode
         std::shared_ptr<roshell_graphics::PerspectiveProjection> pp_;
 
         ros::Subscriber pcl_sub_;
+
+        int subsampling_ = 1;
 };
 
 Pcl2VisualizerNode::Pcl2VisualizerNode(
@@ -71,10 +73,14 @@ void Pcl2VisualizerNode::pcl_visualizer_callback(const pcl::PointCloud<pcl::Poin
     std::vector<pcl::PointXYZ, Eigen::aligned_allocator<pcl::PointXYZ>>
         points = in_cloud_msg->points;
 
-    Eigen::Matrix3Xf points_in_world_frame(3, points.size());
-    for (int i = 0; i < points.size(); i++)
+    Eigen::Matrix3Xf points_in_world_frame(3, points.size() / subsampling_);
+
+    int idx = 0;
+
+    for (int i = 0; i < points_in_world_frame.cols(); i++)
     {
-        points_in_world_frame.col(i) << points[i].x, points[i].y, points[i].z;
+        points_in_world_frame.col(i) << points[idx].x, points[idx].y, points[idx].z;
+        idx += subsampling_;
     }
 
     Eigen::Matrix3Xf points_in_image_plane_with_z_world = pp_->project_multiple_world_points_with_z_world(points_in_world_frame);
