@@ -68,15 +68,15 @@ public:
     std::pair<int, int> get_terminal_size();
 
     // Geometry functions
-    void line(const Point& pp1, const Point& pp2, char c = ' ');
-    void add_frame();
+    void add_line(const Point& pp1, const Point& pp2, char c = ' ');
+    void add_natural_frame();
     void add_points(const Eigen::Matrix2Xf& points);
 
     // Text functions
     void add_text(const Point& start_point, const std::string& text, bool horizontal = true);
     
     // Public Utility functions
-    void fix_frame(Point& p);
+    void transform_to_screen_frame(Point& p);
     void fill_buffer(const int& idx, char c = ' ');
     // Overloaded function that takes point in screen frame
     void fill_buffer(const Point& p, char c = ' ');
@@ -203,7 +203,7 @@ void RoshellGraphics::add_points(const Eigen::Matrix2Xf& points)
     for (int i = 0; i < points.cols(); i++)
     {
         Point p(static_cast<int>(points.col(i)[0]), static_cast<int>(points.col(i)[1]));
-        fix_frame(p);
+        transform_to_screen_frame(p);
         fill_buffer(p);
     }
 }
@@ -211,14 +211,14 @@ void RoshellGraphics::add_points(const Eigen::Matrix2Xf& points)
 /**
  * Draws a line between two points provided in the Natural Reference frame
 */
-void RoshellGraphics::line(const Point& pp1, const Point& pp2, char c)
+void RoshellGraphics::add_line(const Point& pp1, const Point& pp2, char c)
 {   
     // Make copies so they can be modified
     Point p1 = pp1;
     Point p2 = pp2;
 
-    fix_frame(p1);
-    fix_frame(p2);
+    transform_to_screen_frame(p1);
+    transform_to_screen_frame(p2);
 
     put_within_limits_(p1);
     put_within_limits_(p2);
@@ -291,7 +291,7 @@ void RoshellGraphics::line(const Point& pp1, const Point& pp2, char c)
 /**
  * Adds a 2D Natural frame to the buffer, helps with debugging
 */
-void RoshellGraphics::add_frame()
+void RoshellGraphics::add_natural_frame()
 {
     Point pl, pr, pt, pb;
 
@@ -300,8 +300,8 @@ void RoshellGraphics::add_frame()
     pt = Point(0, term_height_ / 2);
     pb = Point(0, -term_height_ / 2);
 
-    line(pl, pr);
-    line(pt, pb);
+    add_line(pl, pr);
+    add_line(pt, pb);
 }
 
 /**
@@ -312,7 +312,7 @@ void RoshellGraphics::add_frame()
 void RoshellGraphics::add_text(const Point& start_point, const std::string& text, bool horizontal)
 {
     Point curr_point = start_point;
-    fix_frame(curr_point);
+    transform_to_screen_frame(curr_point);
 
     // Ignore if starting position is off screen
     if (!is_within_limits_(curr_point))
@@ -348,7 +348,7 @@ void RoshellGraphics::add_text(const Point& start_point, const std::string& text
  * x_screen = x_natural + width / 2
  * y_screen = -y_natural + height / 2
 */
-void RoshellGraphics::fix_frame(Point& p)
+void RoshellGraphics::transform_to_screen_frame(Point& p)
 {
     p(0) = p(0) + static_cast<int>(term_width_ / 2);
     p(1) = -p(1) + static_cast<int>(term_height_ / 2);
