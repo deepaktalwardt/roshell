@@ -42,8 +42,14 @@ catkin_make && source devel/setup.bash
 Then, you can run the ROS nodes provided inside the packages in the `ros_ws/src` directory.
 
 ## Point Cloud Visualization
+### From PCD file
+To visualize a point cloud stored in the PCD file, you need to run the `pcd_visualizer_node`. First, download a test PCD file provided [here](https://drive.google.com/open?id=1HfrEJ8wTFe-DFC0YWpUx6X5AZ5MJgBFG) and place it in `ros_ws/src/roshell_graphics/test/` directory. Then, use rosrun
+```
+rosrun roshell_graphics pcd_visualizer_node
+```
 
-To visualize point clouds inside the terminal, you will need to launch the ROS Node `pcl2_visualizer_node` and play the rosbag provided [here](https://drive.google.com/open?id=1z4M2eawrsd_YgwQ4UPVxoBvqgmICQmMB). Download it to a location and navigate there.
+### From ROS bags
+To visualize point clouds streaming from a rosbag inside the terminal, you will need to launch the ROS Node `pcl2_visualizer_node` and play the rosbag provided [here](https://drive.google.com/open?id=1z4M2eawrsd_YgwQ4UPVxoBvqgmICQmMB). Download it to a location and navigate there.
 
 First, make sure that `roscore` is running, then play the rosbag
 ```
