@@ -27,7 +27,8 @@ class Pcl2VisualizerNode
 
         ~Pcl2VisualizerNode();
 
-        void pcl_visualizer_callback(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& in_cloud_msg);
+        void pcl_visualizer_callback(
+            const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& in_cloud_msg);
     
     private:
         std::string in_topic_;
@@ -90,7 +91,7 @@ int main(int argc, char** argv)
     ros::NodeHandle nh;
     ros::NodeHandle pnh("~");
 
-    std::string in_topic;
+    std::string in_topic = "";
     int cam_x, cam_y, cam_z, cam_focal_distance;
 
     int bad_params = 0;

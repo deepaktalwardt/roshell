@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="topic" default="/random/float"/>
+    <arg name="min_val" default="5"/>
+    <arg name="max_val" default="40"/>
+    <arg name="rate" default="1"/>
+
+    <include file="$(find roshell_graphics)/launch/float_publisher.launch">
+        <arg name="topic" value="$(arg topic)"/>
+        <arg name="min_val" value="$(arg min_val)"/>
+        <arg name="max_val" value="$(arg max_val)"/>
+        <arg name="rate" value="$(arg rate)"/>
+    </include>
+
+    <node name="float_visualizer" pkg="roshell_graphics" type="float_visualizer_node" output="screen">
+        <param name="topic" value="$(arg topic)"/>
+        <param name="min_val" value="$(arg min_val)"/>
+        <param name="max_val" value="$(arg max_val)"/>
+    </node>
+
+</launch>
