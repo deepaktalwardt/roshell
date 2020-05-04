@@ -14,16 +14,15 @@
 void executeLine(char *input)
 {
 
-  //add the entered command to the history list
-  using_history();
-  add_history(input);
-
   // executes a line (which can be either a program call or a shell command)
   char *tokens[MAX_ARGS + 1] = {NULL}; // array to which we'll write tokens
 
   if (0 >= parseInput(input, tokens, MAX_TOK))
     return; // if empty, skip
 
+  //add the entered command to the history list
+  using_history();
+  add_history(input);
   char *command = tokens[0];
 
   // try executing input as a shell commands
@@ -71,7 +70,7 @@ void executeLine(char *input)
     if (the_list)
       for (i = 0; the_list[i]; i++)
       {
-        printf("%s", the_list[i]->line);
+        printf("%s \n", the_list[i]->line);
       }
   }
   else if (strcmp(command, "hc") == 0)
