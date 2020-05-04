@@ -9,7 +9,7 @@
 
 #include <roshell_graphics/roshell_graphics.h>
 
-#define PESERVE_ASPECT 1
+#define PRESERVE_ASPECT 1
 
 namespace roshell_graphics
 {
@@ -53,7 +53,7 @@ void ImageViewerNode::imageCallback(const sensor_msgs::ImageConstPtr& msg)
   cv::Size new_size;
   cv::Mat image_resized;
 
-  if(PESERVE_ASPECT)
+  if(PRESERVE_ASPECT)
   {
     double s = std::min((double)ws.ws_row/image.rows, (double)ws.ws_col/image.cols);
     new_size = cv::Size(2 * image.cols * s, image.rows * s);
