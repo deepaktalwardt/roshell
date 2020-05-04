@@ -88,7 +88,7 @@ public:
     void draw_and_clear(unsigned long delay);
 
     // Image functions
-    void display_image(cv::Mat im);
+    void display_image(const cv::Mat& im);
 
 
 private:
@@ -459,7 +459,7 @@ std::string RoshellGraphics::rgb_to_ascii(cv::Vec3b pixel)
   return "\033[38;2;" + r + ";" + g + ";" + b + "m" + "█" + "\033[0m";
 }
 
-void RoshellGraphics::display_image(cv::Mat im)
+void RoshellGraphics::display_image(const cv::Mat& im)
 {
   std::stringstream buf;
   for(int r = 0; r < im.rows; r++)
