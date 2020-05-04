@@ -30,6 +30,9 @@ To test the command, source "test.sh" script file.
 ```
 source test.sh
 ```
+## Auto Complete
+
+Pressing ```tab``` button auto-completes the input file name only when one match occurs.
 
 <hr>
 
