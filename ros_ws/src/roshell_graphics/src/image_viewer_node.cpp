@@ -5,40 +5,44 @@
 
 #include <sys/ioctl.h>
 #include <unistd.h>
-
 #include <chrono>
+
+#include <roshell_graphics/roshell_graphics.h>
 
 #define PESERVE_ASPECT 1
 
-std::string rgb_to_ascii(cv::Vec3b pixel)
+namespace roshell_graphics
 {
-  // set color using ANSI escape sequences
-  // Excelent explanation here:
-  // https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
 
-  cv::Vec3b p = pixel;
-  std::string b = std::to_string(p[0]);
-  std::string g = std::to_string(p[1]);
-  std::string r = std::to_string(p[2]);
-  return "\033[38;2;" + r + ";" + g + ";" + b + "m" + "█" + "\033[0m";
+class ImageViewerNode
+{
+  public:
+    ImageViewerNode(std::string in_topic);
+    ~ImageViewerNode();
+
+  private:
+    std::shared_ptr<roshell_graphics::RoshellGraphics> rg_;
+    std::shared_ptr<image_transport::ImageTransport> it_;
+    std::string in_topic_;
+    image_transport::Subscriber image_sub_;
+    void imageCallback(const sensor_msgs::ImageConstPtr& msg);
+};
+
+ImageViewerNode::ImageViewerNode(std::string in_topic)
+{
+  ros::NodeHandle nh; 
+  in_topic_ = in_topic;
+  rg_ = std::make_shared<roshell_graphics::RoshellGraphics>();
+  it_ = std::make_shared<image_transport::ImageTransport>(nh);
+  image_sub_ = it_->subscribe(in_topic_, 1, &ImageViewerNode::imageCallback, this);
 }
 
-void display_image(cv::Mat im)
+ImageViewerNode::~ImageViewerNode()
 {
-  std::stringstream buf;
-  for(int r = 0; r < im.rows; r++)
-  {
-    for(int c = 0; c < im.cols; c++)
-    {
-      cv::Vec3b pixel = im.at<cv::Vec3b>(r, c);
-      buf << rgb_to_ascii(pixel);
-    }
-    buf << std::endl;
-  }
-  std::cout << buf.str();
+
 }
 
-void imageCallback(const sensor_msgs::ImageConstPtr& msg)
+void ImageViewerNode::imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
   // Convert image using cv_bridge
   cv::Mat image = cv_bridge::toCvShare(msg, "bgr8")->image;
@@ -63,7 +67,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 
   cv::resize(image, image_resized, new_size);
   cv::imshow("debug_view", image);
-  display_image(image_resized);
+  rg_->display_image(image_resized);
 
   // If we want to measure time
   // auto start = std::chrono::steady_clock::now();
@@ -73,30 +77,26 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
   
 }
 
+}  // eof namespace
+
 
 int main(int argc, char **argv)
 {
+  std::ios::sync_with_stdio(false);
   ros::init(argc, argv, "image_listener");
   ros::NodeHandle nh;
   ros::NodeHandle pnh("~");
 
-  cv::namedWindow("debug_view");
   std::string topic; // topic with image, e.g. "/wide_stereo/right/image_raw"
-
   int bad_params = 0;
-
   bad_params += !pnh.getParam("in_topic", topic);
-  
   if (bad_params > 0)
   {
     std::cout << "One or more parameters not set! Exiting." << std::endl;
     return 1;
   }
 
-  image_transport::ImageTransport it(nh);
-  image_transport::Subscriber sub = it.subscribe(topic, 1, imageCallback);
-  // ROS_INFO("Listening to: " << topic << std::endl);
+  roshell_graphics::ImageViewerNode ivn(topic);
 
   ros::spin();
-  cv::destroyWindow("debug_view");
 }

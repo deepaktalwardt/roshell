@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <sstream>
 #include <algorithm>
 #include <unordered_map>
 
@@ -12,6 +13,7 @@
 #include <cstdlib>
 
 #include <Eigen/Dense>
+#include <opencv2/highgui/highgui.hpp>
 
 namespace roshell_graphics
 {
@@ -85,6 +87,10 @@ public:
     void draw();
     void draw_and_clear(unsigned long delay);
 
+    // Image functions
+    void display_image(cv::Mat im);
+
+
 private:
     // Private Utility functions
     uint8_t rgb_to_byte_(const std::vector<int>& rgb_color);
@@ -92,6 +98,7 @@ private:
     Point decode_index_(const int& index);
     void put_within_limits_(Point& p);
     bool is_within_limits_(const Point& p);
+    std::string rgb_to_ascii(cv::Vec3b pixel);
 
     // Terminal related variables
     int term_height_;
@@ -105,6 +112,7 @@ private:
 
     // Defines which characters to use for different densities
     std::unordered_map<int, char> count_to_char_map_;
+
 };
 
 /**
@@ -141,6 +149,7 @@ RoshellGraphics::RoshellGraphics()
  */
 RoshellGraphics::~RoshellGraphics()
 {
+
 }
 
 /**
@@ -435,6 +444,34 @@ std::pair<int, int> RoshellGraphics::get_terminal_size()
 bool RoshellGraphics::is_within_limits_(const Point& p)
 {
     return p(0) >= 0 && p(0) < term_width_ && p(1) >= 0 && p(1) < term_height_;
+}
+
+std::string RoshellGraphics::rgb_to_ascii(cv::Vec3b pixel)
+{
+  // set color using ANSI escape sequences
+  // Excelent explanation here:
+  // https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
+
+  cv::Vec3b p = pixel;
+  std::string b = std::to_string(p[0]);
+  std::string g = std::to_string(p[1]);
+  std::string r = std::to_string(p[2]);
+  return "\033[38;2;" + r + ";" + g + ";" + b + "m" + "█" + "\033[0m";
+}
+
+void RoshellGraphics::display_image(cv::Mat im)
+{
+  std::stringstream buf;
+  for(int r = 0; r < im.rows; r++)
+  {
+    for(int c = 0; c < im.cols; c++)
+    {
+      cv::Vec3b pixel = im.at<cv::Vec3b>(r, c);
+      buf << rgb_to_ascii(pixel);
+    }
+    buf << std::endl;
+  }
+  std::cout << buf.str();
 }
 
 }  // namespace roshell_graphics
