@@ -23,19 +23,17 @@
 typedef void *histdata_t;
 
 /* The structure used to store a history entry. */
-typedef struct _hist_entry
-{
-   char *line;
+typedef struct _hist_entry {
+  char *line;
 } HIST_ENTRY;
 
 /* A structure used to pass the current state of the history stuff around. */
-typedef struct _hist_state
-{
-   HIST_ENTRY **entries; /* Pointer to the entries themselves. */
-   int offset;           /* The location pointer within this array. */
-   int length;           /* Number of elements within this array. */
-   int size;             /* Number of slots allocated to this array. */
-   int flags;
+typedef struct _hist_state {
+  HIST_ENTRY **entries; /* Pointer to the entries themselves. */
+  int offset;           /* The location pointer within this array. */
+  int length;           /* Number of elements within this array. */
+  int size;             /* Number of slots allocated to this array. */
+  int flags;
 } HISTORY_STATE;
 
 #define HS_STIFLED 0x01
