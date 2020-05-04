@@ -94,7 +94,6 @@ public:
 
 private:
     // Private Utility functions
-    unsigned char rgb_to_byte_(const std::vector<int>& rgb_color);
     int encode_point_(const Point& p);
     Point decode_index_(const int& index);
     void put_within_limits_(Point& p);
