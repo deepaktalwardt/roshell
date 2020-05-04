@@ -47,7 +47,8 @@ int history_base = 1;
 void using_history() { history_offset = history_length; }
 
 /* Return the current HISTORY_STATE of the history. */
-HISTORY_STATE *history_get_history_state() {
+HISTORY_STATE *history_get_history_state()
+{
   HISTORY_STATE *state;
 
   state = (HISTORY_STATE *)malloc(sizeof(HISTORY_STATE));
@@ -56,7 +57,8 @@ HISTORY_STATE *history_get_history_state() {
   state->length = history_length;
   state->size = history_size;
   state->flags = 0;
-  if (history_stifled) state->flags |= HS_STIFLED;
+  if (history_stifled)
+    state->flags |= HS_STIFLED;
 
   return (state);
 }
@@ -68,12 +70,14 @@ void history_set_history_state(state) HISTORY_STATE *state;
   history_offset = state->offset;
   history_length = state->length;
   history_size = state->size;
-  if (state->flags & HS_STIFLED) history_stifled = 1;
+  if (state->flags & HS_STIFLED)
+    history_stifled = 1;
 }
 
 /* Return the history entry at the current position, as determined by
    history_offset.  If there is no entry there, return a NULL pointer. */
-HIST_ENTRY *current_history() {
+HIST_ENTRY *current_history()
+{
   return ((history_offset == history_length) || the_history == 0)
              ? (HIST_ENTRY *)NULL
              : the_history[history_offset];
@@ -82,14 +86,16 @@ HIST_ENTRY *current_history() {
 /* Back up history_offset to the previous history entry, and return
    a pointer to that entry.  If there is no previous entry then return
    a NULL pointer. */
-HIST_ENTRY *previous_history() {
+HIST_ENTRY *previous_history()
+{
   return history_offset ? the_history[--history_offset] : (HIST_ENTRY *)NULL;
 }
 
 /* Move history_offset forward to the next history entry, and return
    a pointer to that entry.  If there is no next entry then return a
    NULL pointer. */
-HIST_ENTRY *next_history() {
+HIST_ENTRY *next_history()
+{
   return (history_offset == history_length) ? (HIST_ENTRY *)NULL
                                             : the_history[++history_offset];
 }
@@ -112,15 +118,14 @@ HIST_ENTRY *history_get(offset) int offset;
 }
 
 char *savestring(s) const char *s;
-{ return ((char *)strcpy((char *)malloc(1 + strlen(s)), (s))); }
+{
+  return ((char *)strcpy((char *)malloc(1 + strlen(s)), (s)));
+}
 
 /* Free HIST and return the data so the calling application can free it
    if necessary and desired. */
 void free_history_entry(hist) HIST_ENTRY *hist;
 {
-  histdata_t x;
-
-  if (hist == 0) return ((histdata_t)0);
   free(hist->line);
   free(hist);
 }
@@ -131,27 +136,37 @@ void add_history(string) const char *string;
 {
   HIST_ENTRY *temp;
 
-  if (history_stifled && (history_length == history_max_entries)) {
+  if (history_stifled && (history_length == history_max_entries))
+  {
     register int i;
 
     /* If the history is stifled, and history_length is zero,
          and it equals history_max_entries, we don't save items. */
-    if (history_length == 0) return;
+    if (history_length == 0)
+      return;
 
     //   /* If there is something in the slot, then remove it. */
-    if (the_history[0]) (void)free_history_entry(the_history[0]);
+    if (the_history[0])
+      (void)free_history_entry(the_history[0]);
 
     /* Copy the rest of the entries, moving down one slot. */
-    for (i = 0; i < history_length; i++) the_history[i] = the_history[i + 1];
+    for (i = 0; i < history_length; i++)
+      the_history[i] = the_history[i + 1];
 
     history_base++;
-  } else {
-    if (history_size == 0) {
+  }
+  else
+  {
+    if (history_size == 0)
+    {
       history_size = DEFAULT_HISTORY_GROW_SIZE;
       the_history = (HIST_ENTRY **)malloc(history_size * sizeof(HIST_ENTRY *));
       history_length = 1;
-    } else {
-      if (history_length == (history_size - 1)) {
+    }
+    else
+    {
+      if (history_length == (history_size - 1))
+      {
         history_size += DEFAULT_HISTORY_GROW_SIZE;
         the_history = (HIST_ENTRY **)realloc(
             the_history, history_size * sizeof(HIST_ENTRY *));
@@ -167,11 +182,13 @@ void add_history(string) const char *string;
   the_history[history_length - 1] = temp;
 }
 
-void clear_history() {
+void clear_history()
+{
   register int i;
 
   /* This loses because we cannot free the data. */
-  for (i = 0; i < history_length; i++) {
+  for (i = 0; i < history_length; i++)
+  {
     free_history_entry(the_history[i]);
     the_history[i] = (HIST_ENTRY *)NULL;
   }
