@@ -25,7 +25,7 @@ class ImageViewerNode
     std::shared_ptr<image_transport::ImageTransport> it_;
     std::string in_topic_;
     image_transport::Subscriber image_sub_;
-    void imageCallback(const sensor_msgs::ImageConstPtr& msg);
+    void image_callback(const sensor_msgs::ImageConstPtr& msg);
 };
 
 ImageViewerNode::ImageViewerNode(std::string in_topic)
@@ -34,7 +34,7 @@ ImageViewerNode::ImageViewerNode(std::string in_topic)
   in_topic_ = in_topic;
   rg_ = std::make_shared<roshell_graphics::RoshellGraphics>();
   it_ = std::make_shared<image_transport::ImageTransport>(nh);
-  image_sub_ = it_->subscribe(in_topic_, 1, &ImageViewerNode::imageCallback, this);
+  image_sub_ = it_->subscribe(in_topic_, 1, &ImageViewerNode::image_callback, this);
 }
 
 ImageViewerNode::~ImageViewerNode()
@@ -42,7 +42,7 @@ ImageViewerNode::~ImageViewerNode()
 
 }
 
-void ImageViewerNode::imageCallback(const sensor_msgs::ImageConstPtr& msg)
+void ImageViewerNode::image_callback(const sensor_msgs::ImageConstPtr& msg)
 {
   // Convert image using cv_bridge
   cv::Mat image = cv_bridge::toCvShare(msg, "bgr8")->image;
