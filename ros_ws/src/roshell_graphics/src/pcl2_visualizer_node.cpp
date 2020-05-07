@@ -23,7 +23,8 @@ class Pcl2VisualizerNode
             const int& cam_x,
             const int& cam_y,
             const int& cam_z,
-            const int& cam_focal_distance);
+            const int& cam_focal_distance,
+            const int& subsampling);
 
         ~Pcl2VisualizerNode();
 
@@ -36,6 +37,8 @@ class Pcl2VisualizerNode
         std::shared_ptr<roshell_graphics::PerspectiveProjection> pp_;
 
         ros::Subscriber pcl_sub_;
+
+        int subsampling_ = 1;
 };
 
 Pcl2VisualizerNode::Pcl2VisualizerNode(
@@ -43,8 +46,10 @@ Pcl2VisualizerNode::Pcl2VisualizerNode(
     const int& cam_x,
     const int& cam_y,
     const int& cam_z,
-    const int& cam_focal_distance):
-    in_topic_(in_topic)
+    const int& cam_focal_distance,
+    const int& subsampling):
+    in_topic_(in_topic),
+    subsampling_(subsampling)
 {
     ros::NodeHandle nh;
 
@@ -71,15 +76,21 @@ void Pcl2VisualizerNode::pcl_visualizer_callback(const pcl::PointCloud<pcl::Poin
     std::vector<pcl::PointXYZ, Eigen::aligned_allocator<pcl::PointXYZ>>
         points = in_cloud_msg->points;
 
-    Eigen::Matrix3Xf points_in_world_frame(3, points.size());
-    for (int i = 0; i < points.size(); i++)
+    Eigen::Matrix3Xf points_in_world_frame(3, points.size() / subsampling_);
+
+    int idx = 0;
+
+    for (int i = 0; i < points_in_world_frame.cols(); i++)
     {
-        points_in_world_frame.col(i) << points[i].x, points[i].y, points[i].z;
+        points_in_world_frame.col(i) << points[idx].x, points[idx].y, points[idx].z;
+        idx += subsampling_;
     }
-    
-    Eigen::Matrix2Xf points_in_image_plane = pp_->project_multiple_world_points(points_in_world_frame);
+
+    Eigen::Matrix3Xf points_in_image_plane_with_z_world = pp_->project_multiple_world_points_with_z_world(points_in_world_frame);
+
     rg_->clear_buffer();
-    rg_->add_points(points_in_image_plane);
+    rg_->add_points(points_in_image_plane_with_z_world);
+
     rg_->draw();
 }
 
@@ -92,7 +103,7 @@ int main(int argc, char** argv)
     ros::NodeHandle pnh("~");
 
     std::string in_topic = "";
-    int cam_x, cam_y, cam_z, cam_focal_distance;
+    int cam_x, cam_y, cam_z, cam_focal_distance, subsampling;
 
     int bad_params = 0;
 
@@ -101,6 +112,7 @@ int main(int argc, char** argv)
     bad_params += !pnh.getParam("cam_y", cam_y);
     bad_params += !pnh.getParam("cam_z", cam_z);
     bad_params += !pnh.getParam("cam_focal_distance", cam_focal_distance);
+    bad_params += !pnh.getParam("subsampling", subsampling);
 
     if (bad_params > 0)
     {
@@ -113,7 +125,8 @@ int main(int argc, char** argv)
         cam_x,
         cam_y,
         cam_z,
-        cam_focal_distance);
+        cam_focal_distance,
+        subsampling);
 
     ros::spin();
     return 0;
