@@ -228,6 +228,13 @@ add_dependencies(image_viewer_node
 )
 
 ## Specify libraries to link a library or executable target against
+target_link_libraries(roshell_graphics_test_node
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${PCL_LIBRARIES}
+  ${Eigen_LIBRARIES}
+)
+
 target_link_libraries(pcd_visualizer_node
   ${catkin_LIBRARIES}
   ${Boost_LIBRARIES}
