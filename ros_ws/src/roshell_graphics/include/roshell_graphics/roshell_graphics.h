@@ -550,12 +550,11 @@ void RoshellGraphics::add_image(const cv::Mat& im, bool preserve_aspect)
     for (int r = 0; r < image_resized.rows; r++)
     {
         for (int c = 0; c < image_resized.cols; c++)
-        {
-            int p = encode_point_({c, r});                        /* Point takes in (col, row) */
-            cv::Vec3b pixel = image_resized.at<cv::Vec3b>(r, c);  /* But cv::Mat is indexed (row, col) */
+        {                       
+            cv::Vec3b pixel = image_resized.at<cv::Vec3b>(r, c);  /* cv::Mat is indexed (row, col) */
 
             std::vector<unsigned char> color = {pixel[2], pixel[1], pixel[0]};  /* BGR -> RGB */
-            fill_buffer(Point(c, r), color, "█");
+            fill_buffer(Point(c, r), color, "█");                               /* Point takes in (col, row) */
         }
     }
 }
