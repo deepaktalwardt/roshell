@@ -5,7 +5,6 @@
 #include <string>
 #include <algorithm>
 #include <unordered_map>
-#include <sstream>
 
 #include <stdio.h>
 #include <sys/ioctl.h>
@@ -14,6 +13,7 @@
 
 #include <boost/algorithm/string/join.hpp>
 #include <Eigen/Dense>
+#include "opencv2/opencv.hpp"
 
 namespace roshell_graphics
 {
@@ -74,6 +74,9 @@ public:
     void add_natural_frame();
     void add_points(const Eigen::Matrix2Xf& points);
     void add_points(const Eigen::Matrix3Xf& points);
+
+    // Image functions
+    void add_image(const cv::Mat& im, bool preserve_aspect = true);
 
     // Text functions
     void add_text(const Point& start_point, const std::string& text, bool horizontal = true);
@@ -157,6 +160,7 @@ RoshellGraphics::RoshellGraphics()
  */
 RoshellGraphics::~RoshellGraphics()
 {
+
 }
 
 /**
@@ -239,6 +243,10 @@ void RoshellGraphics::fill_color(const int& idx, std::vector<unsigned char> colo
 */
 std::string RoshellGraphics::convert_rgb_to_string_(const std::vector<unsigned char>& color, const std::string& c)
 {
+    // set color using ANSI escape sequences
+    // Excelent explanation here:
+    // https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
+
     std::string r, g, b;
 
     r = std::to_string(color[0]);
@@ -457,7 +465,7 @@ void RoshellGraphics::draw()
     {
         if (buffer_[i] != " ")  // If buffer[i] already filled, ignore
         {
-            out_buffer += buffer_[i];
+            out_buffer += convert_rgb_to_string_(buffer_colors_[i], buffer_[i]);
             continue;
         }
 
@@ -513,6 +521,42 @@ std::pair<int, int> RoshellGraphics::get_terminal_size()
 bool RoshellGraphics::is_within_limits_(const Point& p)
 {
     return p(0) >= 0 && p(0) < term_width_ && p(1) >= 0 && p(1) < term_height_;
+}
+
+/**
+ * Adds image to the buffer. Resizes im to the correct size depending on the size of the terminal
+ * and whether preserve_aspect is set to true or false
+*/
+void RoshellGraphics::add_image(const cv::Mat& im, bool preserve_aspect)
+{
+    cv::Size new_size;
+    cv::Mat image_resized;
+
+    if (preserve_aspect)
+    {
+        double s = std::min((double) term_height_ / im.rows, 
+            (double) term_width_ / im.cols);
+        new_size = cv::Size(2 * im.cols * s, im.rows * s);
+        image_resized = cv::Mat(new_size, CV_8UC3, cv::Scalar(0, 0, 0));
+    }
+    else // fullscreen
+    {
+        new_size = cv::Size(term_width_, term_height_);
+        image_resized = cv::Mat(new_size, CV_8UC3, cv::Scalar(0, 0, 0));
+    }
+
+    cv::resize(im, image_resized, new_size);
+
+    for (int r = 0; r < image_resized.rows; r++)
+    {
+        for (int c = 0; c < image_resized.cols; c++)
+        {                       
+            cv::Vec3b pixel = image_resized.at<cv::Vec3b>(r, c);  /* cv::Mat is indexed (row, col) */
+
+            std::vector<unsigned char> color = {pixel[2], pixel[1], pixel[0]};  /* BGR -> RGB */
+            fill_buffer(Point(c, r), color, "█");                               /* Point takes in (col, row) */
+        }
+    }
 }
 
 }  // namespace roshell_graphics

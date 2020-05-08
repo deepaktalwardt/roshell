@@ -79,3 +79,26 @@ To create line plots, we first need to have a publisher node that will publish r
 roslaunch roshell_graphics float_visualizer.launch
 ```
 This will start both a floating point publisher and a subscriber and start printing values to the scren.
+
+## Images
+
+To test image functionality:
+
+Do the standard setup:
+```bash
+cd roshell/ros_ws
+catkin_make
+source devel/setup.bash
+```
+
+Get some rosbags with image data to test. For example: [http://infinity.csail.mit.edu/data/2011/2011-04-06-06-38-27.bag](http://infinity.csail.mit.edu/data/2011/2011-04-06-06-38-27.bag).
+
+Play your rosbag:
+``` bash
+rosbag play 2011-04-06-06-38-27.bag -l -r 0.5
+```
+
+Run the node, passing the topic as an argument:
+```bash
+rosrun roshell_graphics image_viewer_node _in_topic:=/wide_stereo/right/image_raw
+```
