@@ -15,7 +15,6 @@
 
 #include <boost/algorithm/string/join.hpp>
 #include <Eigen/Dense>
-#include <opencv2/highgui/highgui.hpp>
 #include "opencv2/opencv.hpp"
 
 namespace roshell_graphics
