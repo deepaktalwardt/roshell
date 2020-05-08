@@ -27,7 +27,7 @@ void draw_random_lines(
         p1(1) = rand() % max_h - (max_h / 2);
         p2(1) = rand() % max_h - (max_h / 2);
 
-        rg.line(p1, p2);
+        rg.add_line(p1, p2);
         rg.draw_and_clear(delay);
     }
 }
@@ -68,9 +68,9 @@ void draw_3D_axis(
     p4(0) = points_in_image_frame(0, 3);
     p4(1) = points_in_image_frame(1, 3);
 
-    rg.line(p1, p2);
-    rg.line(p1, p3);
-    rg.line(p1, p4);
+    rg.add_line(p1, p2);
+    rg.add_line(p1, p3);
+    rg.add_line(p1, p4);
 
     // rg.draw();
 }
@@ -80,7 +80,7 @@ void draw_3D_axis(
 */
 void draw_rotating_cube(
     roshell_graphics::RoshellGraphics& rg,
-    char c)
+    std::string c)
 {
     // Vertices for the cube
     Eigen::Matrix3Xf points_in_world_frame(3, 8);
@@ -148,20 +148,20 @@ void draw_rotating_cube(
         p8(0) = points_in_image_frame(0, 7);
         p8(1) = points_in_image_frame(1, 7);
 
-        rg.line(p1, p2, '&'); // example
-        rg.line(p2, p3, c);
-        rg.line(p3, p4, c);
-        rg.line(p4, p1, c);
+        rg.add_line(p1, p2, "&"); // example
+        rg.add_line(p2, p3, c);
+        rg.add_line(p3, p4, c);
+        rg.add_line(p4, p1, c);
 
-        rg.line(p5, p6, 'G');
-        rg.line(p6, p7, c);
-        rg.line(p7, p8, c);
-        rg.line(p8, p5, c);
+        rg.add_line(p5, p6, "G");
+        rg.add_line(p6, p7, c);
+        rg.add_line(p7, p8, c);
+        rg.add_line(p8, p5, c);
 
-        rg.line(p1, p5, 'M');
-        rg.line(p2, p6, c);
-        rg.line(p3, p7, c);
-        rg.line(p4, p8, c);
+        rg.add_line(p1, p5, "M");
+        rg.add_line(p2, p6, c);
+        rg.add_line(p3, p7, c);
+        rg.add_line(p4, p8, c);
 
         rg.draw_and_clear(10e4);
     }
@@ -196,8 +196,8 @@ int main(int argc, char** argv)
     // draw_random_lines(rg, 10, term_size.first, term_size.second, 5e5);
     // draw_lines(rg);
     // draw_3D_axis(rg, pp);
-
-    draw_rotating_cube(rg, '/');
+    
+    draw_rotating_cube(rg, "/");
     // test_add_text(rg, "Yay! this actually works now let's stress it! It needs to be longer than this");
 
     return 0;
