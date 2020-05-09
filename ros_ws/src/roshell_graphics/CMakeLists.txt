@@ -11,7 +11,12 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_ros
   roscpp
   rospy
+  image_transport
+  cv_bridge
 )
+
+find_package(OpenCV REQUIRED)
+
 
 find_package(Boost REQUIRED COMPONENTS
   system
@@ -132,6 +137,7 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   ${Eigen_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 link_directories(${PCL_LIBRARY_DIRS})
@@ -179,6 +185,10 @@ add_executable(float_visualizer_node
   src/float_visualizer_node.cpp
 )
 
+add_executable(image_viewer_node
+  src/image_viewer_node.cpp
+)
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -212,7 +222,19 @@ add_dependencies(float_visualizer_node
   ${catkin_EXPORTED_TARGETS}
 )
 
+add_dependencies(image_viewer_node
+  ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+  ${catkin_EXPORTED_TARGETS}
+)
+
 ## Specify libraries to link a library or executable target against
+target_link_libraries(roshell_graphics_test_node
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${PCL_LIBRARIES}
+  ${Eigen_LIBRARIES}
+)
+
 target_link_libraries(pcd_visualizer_node
   ${catkin_LIBRARIES}
   ${Boost_LIBRARIES}
@@ -233,6 +255,11 @@ target_link_libraries(float_publisher_node
 
 target_link_libraries(float_visualizer_node
   ${catkin_LIBRARIES}
+)
+
+target_link_libraries(image_viewer_node
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
 )
 
 #############

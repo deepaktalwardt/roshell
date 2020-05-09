@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- <arg name="in_topic" default="/wide_stereo/right/image_raw"/> -->
+    <arg name="in_topic" default="/simulator/camera/color"/>
+    <arg name="compressed_images" default="true"/>
+    <arg name="preserve_aspect" default="true"/>
+    
+    <group if="$(arg compressed_images)">
+        <node name="decompress_camera_images_from_bag"
+            type="republish" 
+            pkg="image_transport" 
+            output="log" 
+            args="compressed in:=$(arg in_topic) raw out:=$(arg in_topic) ~image_transport:=compressed"/>
+    </group>
+
+    <node name="image_viewer" pkg="roshell_graphics" type="image_viewer_node" output="screen">
+        <param name="in_topic" value="$(arg in_topic)"/>
+        <param name="preserve_aspect" value="$(arg preserve_aspect)"/>
+    </node>
+
+</launch>
