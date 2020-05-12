@@ -33,6 +33,9 @@ source test.sh
 ## Auto Complete
 
 Pressing ```tab``` button auto-completes the input file name only when one match occurs.
+When multiple matches occur, pressing ```tab``` second time, all matching files are listed.
+For the first word in command line, it searches the matching files from ```$PATH```.
+For the other words in command line, it searches files the current directory only.
 
 <hr>
 
@@ -67,7 +70,7 @@ roslaunch roshell_graphics pcl2_visualizer.launch
 This should now start visualizing the point clouds that are streamed from the rosbag over the default topic : `/simulator/lidar`. The window should look something like this:
 ![](images/pcl2_visualizer.gif)
 
-This node allows for some parameters to be changed as needed. See the `ros_ws/src/roshell_graphics/launch/pcl2_visualizer.launch` file for more details. For example, to change the camera focal distance (which controls the zoom level) and input topic, you should launch the node like this 
+This node allows for some parameters to be changed as needed. See the `ros_ws/src/roshell_graphics/launch/pcl2_visualizer.launch` file for more details. For example, to change the camera focal distance (which controls the zoom level) and input topic, you should launch the node like this
 ```
 roslaunch roshell_graphics pcl2_visualizer cam_focal_distance:=500 in_topic:=/lidar
 ```
