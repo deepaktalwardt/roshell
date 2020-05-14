@@ -1,12 +1,15 @@
 #include "command.h"
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
+
 #include "cd.h"
 #include "const.h"
+#include "history.h"
 #include "source.h"
 #include "variable.h"
 //Global variable for mainting the process id used for Ctrl+c functionality
@@ -26,14 +29,16 @@ void sigint_handler(int sig){
     }
 }
 
-void executeLine(char* input) {
+void executeLine(char *input) {
   // executes a line (which can be either a program call or a shell command)
-
-  char* tokens[MAX_ARGS + 1] = {NULL};  // array to which we'll write tokens
+  char *tokens[MAX_ARGS + 1] = {NULL};  // array to which we'll write tokens
 
   if (0 >= parseInput(input, tokens, MAX_TOK)) return;  // if empty, skip
 
-  char* command = tokens[0];
+  // add the entered command to the history list
+  using_history();
+  add_history(input);
+  char *command = tokens[0];
 
   // try executing input as a shell commands
   // if command includes "=" set variable with the value after "=" as sting
@@ -62,6 +67,20 @@ void executeLine(char* input) {
   {
     printf("source command\n");
     sourceCommand(tokens);
+  } else if (strcmp(command, "history") == 0) {
+    if (tokens[1] != NULL && strcmp(tokens[1], "clear") == 0) {
+      clear_history();
+      printf("History Cleared \n");
+    } else {
+      printf("History List: \n");
+      register HIST_ENTRY **the_list;
+      register int i;
+      the_list = history_list();
+      if (the_list)
+        for (i = 0; the_list[i]; i++) {
+          printf("%s \n", the_list[i]->line);
+        }
+    }
   } else  // if the program is not a shell command, try executing as a program.
   {
     executeProgram(tokens);
@@ -69,7 +88,7 @@ void executeLine(char* input) {
   wait(NULL);
 }
 
-int parseInput(char input[], char* tokens[], size_t max_tok) {
+int parseInput(char input[], char *tokens[], size_t max_tok) {
   // original parsing from:
   // https://danrl.com/blog/2018/how-to-write-a-tiny-shell-in-c/ takes raw input
   // as a char array e.g. "ssh user@localhost -p 2222" writes the output to a
@@ -78,7 +97,7 @@ int parseInput(char input[], char* tokens[], size_t max_tok) {
 
   input[strlen(input) - 1] = '\0';  // terminate with null, rather than with \n
 
-  char* token = strtok(input, " ");
+  char *token = strtok(input, " ");
   int n = 0;
 
   for (; token != NULL && n < max_tok; ++n) {
@@ -94,7 +113,7 @@ int parseInput(char input[], char* tokens[], size_t max_tok) {
   return n;
 }
 
-void executeProgram(char* tokens[]) {
+void executeProgram(char *tokens[]) {
   // executes program (such as /bin/ls, /usr/bin/git, etc. as a child process)
   if (fork() == 0)  // if inside the child process
   {
