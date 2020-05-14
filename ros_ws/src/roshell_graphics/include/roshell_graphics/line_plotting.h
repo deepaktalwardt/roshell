@@ -23,7 +23,7 @@ public:
 
     //Useful methods
     void DrawAxis(std::string ylabel);
-    void PlotPoints(int points_list[]);
+    // void PlotPoints(int points_list[]);
 
 private:
     //terminal height and width
@@ -82,8 +82,8 @@ void PlotGraph :: DrawAxis(std::string ylabel)
     clear_buffer();
 
     // Draw X-axis and y-axis on terminal
-    line(origin_,xlimit_,'_');
-    line(origin_,ylimit_,'|');
+    add_line(origin_,xlimit_,"_");
+    add_line(origin_,ylimit_,"|");
 
     // Add labels for X-axis and Y-axis
     Point x_end = Eigen::Vector2i((xlimit_[0] + 2),(xlimit_[1]));
@@ -108,67 +108,67 @@ void PlotGraph :: DrawAxis(std::string ylabel)
     draw();
 }
 
-void PlotGraph :: PlotPoints(int points_list[])
-{
-    // printf("Points_size:%d\n",sizeof(*points_list)/(sizeof(points_list[0])));
-    Point p1 = origin_;
-    Point p2 = origin_;
-    int min_value = points_list[0];
-    int max_value = points_list[0];
-    int y_len;
-    for (int i = 1;i <= (sizeof(points_list[])/(sizeof(points_list[0])));i++)
-    {
-        if(points_list[i] < min_value)
-        {
-            min_value = points_list[i];
-        }
-        else if(points_list[i] > max_value)
-        {
-            max_value = points_list[i];
-        }
-        //Recalcuate one y_tick
-        // one_tick_y = (max_value-min_value)/(Ylim_[1]-origin_[1]);
-    }
-    for (int i = 1;i <= (sizeof(points_list[])/(sizeof(points_list[0])));i++)
-    {
-        if(i > 1)
-        {
-            p2=p1;
-        }
-        y_len = (ylimit_[1]-origin_[1]);
-        float distance_from_origin =  ((float) points_list[i] * y_len /(float)max_value );
-        p1[0] = origin_[0] + (one_tick_x_*i);
-        p1[1] = origin_[1] + (int)distance_from_origin;
-        if(i>1)
-        {
-            // Calculate slope
-            float slope = (float)(p1[1]-p2[1])/(float)(p1[0]-p2[0]);
-            if(slope < 0)
-            {
-                line(p1,p2,'\\');
-            }
-            else if(slope > 0)
-            {
-                line(p1,p2,'/');
-            }
-            else if(slope == 0)
-            {
-                line(p1,p2,'-');
-            }
-            else
-            {
-                line(p1,p2,'|');
-            }
-            add_text(p2,"O");   
-        }
-        Point y_max_text = Eigen::Vector2i((ylimit_[0]-1),(ylimit_[1]));
-        Point y_min_text = Eigen::Vector2i((origin_[0]-1),(origin_[1]));
-        // add_text(y_max_text,std::to_string(max_value));
-        // add_text(y_min_text,std::to_string(min_value));
-        add_text(p1,"O");
-    }
-    draw();
-}
+// void PlotGraph :: PlotPoints(int points_list[])
+// {
+//     // printf("Points_size:%d\n",sizeof(*points_list)/(sizeof(points_list[0])));
+//     Point p1 = origin_;
+//     Point p2 = origin_;
+//     int min_value = points_list[0];
+//     int max_value = points_list[0];
+//     int y_len;
+//     for (int i = 1;i <= (sizeof(points_list[])/(sizeof(points_list[0])));i++)
+//     {
+//         if(points_list[i] < min_value)
+//         {
+//             min_value = points_list[i];
+//         }
+//         else if(points_list[i] > max_value)
+//         {
+//             max_value = points_list[i];
+//         }
+//         //Recalcuate one y_tick
+//         // one_tick_y = (max_value-min_value)/(Ylim_[1]-origin_[1]);
+//     }
+//     for (int i = 1;i <= (sizeof(points_list[])/(sizeof(points_list[0])));i++)
+//     {
+//         if(i > 1)
+//         {
+//             p2=p1;
+//         }
+//         y_len = (ylimit_[1]-origin_[1]);
+//         float distance_from_origin =  ((float) points_list[i] * y_len /(float)max_value );
+//         p1[0] = origin_[0] + (one_tick_x_*i);
+//         p1[1] = origin_[1] + (int)distance_from_origin;
+//         if(i>1)
+//         {
+//             // Calculate slope
+//             float slope = (float)(p1[1]-p2[1])/(float)(p1[0]-p2[0]);
+//             if(slope < 0)
+//             {
+//                 add_line(p1,p2, "\\");
+//             }
+//             else if(slope > 0)
+//             {
+//                 add_line(p1,p2,"/");
+//             }
+//             else if(slope == 0)
+//             {
+//                 add_line(p1,p2,"-");
+//             }
+//             else
+//             {
+//                 add_line(p1,p2,"|");
+//             }
+//             add_text(p2,"O");   
+//         }
+//         Point y_max_text = Eigen::Vector2i((ylimit_[0]-1),(ylimit_[1]));
+//         Point y_min_text = Eigen::Vector2i((origin_[0]-1),(origin_[1]));
+//         // add_text(y_max_text,std::to_string(max_value));
+//         // add_text(y_min_text,std::to_string(min_value));
+//         add_text(p1,"O");
+//     }
+//     draw();
+// }
 
 }
 

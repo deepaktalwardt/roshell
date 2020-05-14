@@ -14,6 +14,6 @@ int main(int argc, char** argv){
     std::string ylabel="Y-axis";
     // Draw axis on terminal
     pg.DrawAxis(ylabel);
-    int arr[2]={0,1};
-    pg.PlotPoints(arr);
+    // int arr[2]={0,1};
+    // pg.PlotPoints(arr);
 }
