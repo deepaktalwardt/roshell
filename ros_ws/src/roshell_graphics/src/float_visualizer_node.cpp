@@ -4,6 +4,7 @@
 
 #include <roshell_graphics/roshell_graphics.h>
 #include <roshell_graphics/perspective_projection.h>
+#include <roshell_graphics/line_plotting.h>
 
 namespace roshell_graphics
 {
@@ -37,9 +38,6 @@ FloatVisualizer::FloatVisualizer(
     max_val_(max_val)
 {
     // TODO(Parshwa): Creating plotting object here
-
-    sub_ = nh_.subscribe<std_msgs::Float32>
-        (topic, 10, &FloatVisualizer::callback, this);
 }
 
 FloatVisualizer::~FloatVisualizer()

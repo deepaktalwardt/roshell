@@ -8,6 +8,7 @@
 #include <termios.h>
 #include <unistd.h>
 #include "const.h"
+#include "variable.h"
 
 //------------------------------------------------------------------------------
 //  readInput()
@@ -49,12 +50,16 @@ int readInput(char* input, int size, char* path_str) {
     } else if (ch == '\t') {  // For Tab, autocomplete command or file name
       // TODO: auto autocomplete
       int num_byte = findInDirectory(input);
+
+      // printf("\n%d: %s%s", num_byte, path_str, input);
       // Print again if multiple selections are available
       if (num_byte > 0) {
         for (int i = num_byte; i > 0; i--) {
           putchar(input[strlen(input) - i]);
           index++;
         }
+      } else if (num_byte < 0) {
+        printf("%s%s", path_str, input);
       }
     } else if (ch == 0x1b) {  // Arrow buttons
       // Do nothing for arrow buttons for now
@@ -120,8 +125,10 @@ int findInDirectory(char* input) {
   struct dirent* dir;
   char* last_input = input;
   char file_found[MAX_COMM_SIZE] = {0x0};
+  static char saved_input[MAX_COMM_SIZE] = {0x0};  // to detect second tab
   int num_occur = 0;
   int added_byte = 0;
+  int isCommand = 0;
 
   // search the last word in input
   for (int i = 0; input[i] != '\0'; i++) {
@@ -133,21 +140,64 @@ int findInDirectory(char* input) {
   // exit if empty string
   if (last_input[0] == '\0') return 0;
 
-  d = opendir(".");
-  if (d) {
-    while ((dir = readdir(d)) != NULL) {
-      // Find matching file name
-      if (strncmp(dir->d_name, last_input, strlen(last_input)) == 0) {
-        strncpy(file_found, dir->d_name, strlen(dir->d_name));
-        num_occur++;
-      }
-    }
-    // update input only if one occurrence
-    if (num_occur == 1) {
-      added_byte = strlen(file_found) - strlen(last_input);
-      strncpy(last_input, file_found, strlen(file_found));
-    }
-    closedir(d);
+  // if command, it will search full path list
+  if (last_input == input) isCommand = 1;
+
+  char* path_list = searchVariable("PATH");
+  char* path_list_copy = NULL;
+  char* path_tokens[MAX_TOK + 1] = {NULL};
+
+  path_list_copy = (char*)malloc(strlen(path_list));
+  strncpy(path_list_copy, path_list, strlen(path_list));
+
+  // Add current directory first to the tokens
+  char curr_dir[2] = {0};
+  curr_dir[0] = '.';
+  path_tokens[0] = curr_dir;
+
+  // parse PATH list to tokens
+  char* token = strtok(path_list_copy, ":\0\n");
+  int n = 1;
+  for (; token != NULL && n < MAX_TOK; ++n) {
+    path_tokens[n] = token;
+    token = strtok(NULL, ":\0\n");
   }
+
+  for (int m = 0; path_tokens[m] != NULL && m < MAX_TOK; ++m) {
+    if ((isCommand == 0) && (m > 0))
+      break;  // if not command, search current dir only
+    d = opendir(path_tokens[m]);
+
+    if (d) {
+      while ((dir = readdir(d)) != NULL) {
+        // Find matching file name
+        if (strncmp(dir->d_name, last_input, strlen(last_input)) == 0) {
+          if (strncmp(saved_input, input, strlen(input)) == 0) {
+            printf("\n%s", dir->d_name);
+          }
+          strncpy(file_found, dir->d_name, strlen(dir->d_name));
+          num_occur++;
+        }
+      }
+      closedir(d);
+    }
+  }
+
+  free(path_list_copy);
+
+  if (strncmp(saved_input, input, strlen(input)) == 0) {
+    printf("\n");
+    strncpy(saved_input, "\0", 1);
+    return -1;
+  } else {
+    strncpy(saved_input, input, strlen(input));
+  }
+
+  // update input only if one occurrence
+  if (num_occur == 1) {
+    added_byte = strlen(file_found) - strlen(last_input);
+    strncpy(last_input, file_found, strlen(file_found));
+  }
+
   return added_byte;
 }

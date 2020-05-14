@@ -31,8 +31,8 @@ void pcd_visualizer(
         points_in_world_frame.col(i) << points[i].x, points[i].y, points[i].z;
     }
     
-    Eigen::Matrix2Xf points_in_image_plane = pp.project_multiple_world_points(points_in_world_frame);
-    rg.add_points(points_in_image_plane);
+    Eigen::Matrix3Xf points_in_image_plane_with_z_world = pp.project_multiple_world_points_with_z_world(points_in_world_frame);
+    rg.add_points(points_in_image_plane_with_z_world);
     rg.draw();
 }
 
@@ -46,7 +46,7 @@ int main(int argc, char** argv)
     roshell_graphics::Camera cam;
     Eigen::Vector3f cam_loc(10, 10, 10);
     cam.location = cam_loc;
-    cam.focal_distance = 400;
+    cam.focal_distance = 200;
     roshell_graphics::PerspectiveProjection pp(cam);
 
     // Load and test a PointCloud PCD file

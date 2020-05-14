@@ -4,11 +4,7 @@
 #include <unistd.h>
 #include <eigen3/Eigen/Dense>
 
-#include <roshell_graphics/2Dline_plotting.h>
-
-void draw_axis(roshell_graphics::PlotGraph& pg,int max_x,int max_y,std::string xlabel, std::string ylabel){
-    pg.DrawAxis(max_x,max_y,xlabel,ylabel);
-}
+#include <roshell_graphics/line_plotting.h>
 
 int main(int argc, char** argv){
     roshell_graphics::PlotGraph pg;
@@ -16,5 +12,8 @@ int main(int argc, char** argv){
     int max_y=100;
     std::string xlabel="X-axis";
     std::string ylabel="Y-axis";
-    draw_axis(pg,max_x,max_y,xlabel,ylabel);
+    // Draw axis on terminal
+    pg.DrawAxis(ylabel);
+    int arr[2]={0,1};
+    pg.PlotPoints(arr);
 }
