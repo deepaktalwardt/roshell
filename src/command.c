@@ -4,13 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
-<<<<<<< HEAD
-#include <signal.h>
-#include "command.h"
-=======
 #include <unistd.h>
 #include "cd.h"
->>>>>>> 3db30bc8cebe2dbb5e8ed04c2dc3354474d23a45
 #include "const.h"
 #include "source.h"
 #include "variable.h"
