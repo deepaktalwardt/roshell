@@ -271,6 +271,11 @@ target_link_libraries(image_viewer_node
   ${OpenCV_LIBRARIES}
 )
 
+target_link_libraries(roshell_graphics_plot_node
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
 #############
 ## Install ##
 #############

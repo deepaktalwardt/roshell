@@ -405,7 +405,7 @@ void RoshellGraphics::add_text(const Point& start_point, const std::string& text
     for(int i = 0; i < text.size(); i++)
     {
         int idx = encode_point_(curr_point);
-        fill_buffer(idx, std::to_string(text[i]));
+        fill_buffer(idx, std::string(1, text[i]));
         
         if (horizontal) // iterate over cols
         {
@@ -465,7 +465,14 @@ void RoshellGraphics::draw()
     {
         if (buffer_[i] != " ")  // If buffer[i] already filled, ignore
         {
-            out_buffer += convert_rgb_to_string_(buffer_colors_[i], buffer_[i]);
+            // if (buffer_[i] == "█")
+            // {
+                out_buffer += convert_rgb_to_string_(buffer_colors_[i], buffer_[i]);
+            // }
+            // else 
+            // {
+            //     out_buffer += buffer_[i];
+            // }
             continue;
         }
 

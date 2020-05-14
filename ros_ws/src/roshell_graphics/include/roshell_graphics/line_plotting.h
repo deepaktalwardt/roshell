@@ -82,7 +82,7 @@ void PlotGraph :: DrawAxis(std::string ylabel)
     clear_buffer();
 
     // Draw X-axis and y-axis on terminal
-    add_line(origin_,xlimit_,"_");
+    add_line(origin_,xlimit_,"-");
     add_line(origin_,ylimit_,"|");
 
     // Add labels for X-axis and Y-axis
