@@ -19,7 +19,7 @@ Else it kill the whole program.
 void sigint_handler(int sig){
   if(process_id != main_process)
   {
-    kill(process_id,SIGQUIT);
+    kill(process_id,SIGTERM);
     process_id = main_process;
     return;
   }
