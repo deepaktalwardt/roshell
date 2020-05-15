@@ -37,6 +37,11 @@ When multiple matches occur, pressing ```tab``` second time, all matching files 
 For the first word in command line, it searches the matching files from ```$PATH```.
 For the other words in command line, it searches files the current directory only.
 
+## History
+```history``` command displays a list of previously executed commands on roshell. <br /> 
+```history clear``` command clears the log of the previously executed commands maintained by roshell <br />
+Up and down arrow keys can be used to scroll through the history list.
+
 <hr>
 
 # Robotic Features
