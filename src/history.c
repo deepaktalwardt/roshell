@@ -44,53 +44,24 @@ int history_base = 1;
 
 /* Begin a session in which the history functions might be used.  This
    initializes interactive variables. */
-void using_history() { history_offset = history_length; }
-
-/* Return the current HISTORY_STATE of the history. */
-HISTORY_STATE *history_get_history_state() {
-  HISTORY_STATE *state;
-
-  state = (HISTORY_STATE *)malloc(sizeof(HISTORY_STATE));
-  state->entries = the_history;
-  state->offset = history_offset;
-  state->length = history_length;
-  state->size = history_size;
-  state->flags = 0;
-  if (history_stifled) state->flags |= HS_STIFLED;
-
-  return (state);
-}
-
-/* Set the state of the current history array to STATE. */
-void history_set_history_state(state) HISTORY_STATE *state;
-{
-  the_history = state->entries;
-  history_offset = state->offset;
-  history_length = state->length;
-  history_size = state->size;
-  if (state->flags & HS_STIFLED) history_stifled = 1;
-}
-
-/* Return the history entry at the current position, as determined by
-   history_offset.  If there is no entry there, return a NULL pointer. */
-HIST_ENTRY *current_history() {
-  return ((history_offset == history_length) || the_history == 0)
-             ? (HIST_ENTRY *)NULL
-             : the_history[history_offset];
-}
+void using_history() { history_offset = history_length + 1; }
 
 /* Back up history_offset to the previous history entry, and return
    a pointer to that entry.  If there is no previous entry then return
    a NULL pointer. */
 HIST_ENTRY *previous_history() {
-  return history_offset ? the_history[--history_offset] : (HIST_ENTRY *)NULL;
+  if (history_offset > 0) {
+    return the_history[--history_offset];
+  } else {
+    history_offset = -1;
+    return (HIST_ENTRY *)NULL;
+  }
 }
-
 /* Move history_offset forward to the next history entry, and return
    a pointer to that entry.  If there is no next entry then return a
    NULL pointer. */
 HIST_ENTRY *next_history() {
-  return (history_offset == history_length) ? (HIST_ENTRY *)NULL
+  return (history_offset >= history_length) ? (HIST_ENTRY *)NULL
                                             : the_history[++history_offset];
 }
 

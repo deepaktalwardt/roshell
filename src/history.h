@@ -44,12 +44,6 @@ typedef struct _hist_state {
    just initializes the interactive variables. */
 void using_history(void);
 
-/* Return the current HISTORY_STATE of the history. */
-HISTORY_STATE *history_get_history_state(void);
-
-/* Set the state of the current history array to STATE. */
-void history_set_history_state(HISTORY_STATE *);
-
 /* Free the history entry H and return any application-specific data
    associated with it. */
 void free_history_entry(HIST_ENTRY *);
@@ -64,10 +58,6 @@ void add_history(const char *);
 
 /* Clear the history list and start over. */
 void clear_history(void);
-
-/* Return the history entry at the current position, as determined by
-   history_offset.  If there is no entry there, return a NULL pointer. */
-HIST_ENTRY *current_history(void);
 
 /* Back up history_offset to the previous history entry, and return
    a pointer to that entry.  If there is no previous entry, return
