@@ -32,9 +32,6 @@ public:
         const std::string& ylabel);
 
 private:
-    // //terminal height and width
-    // int term_width_;
-    // int term_height_;
     // Varibles for axis limits
     int Xlim_;
     int Ylim_;
@@ -52,9 +49,6 @@ private:
 
 PlotGraph::PlotGraph()
 {
-    // std::pair <int,int> term_size=get_terminal_size();
-    // term_height_ = term_size.second;
-    // term_width_ = term_size.first;
     pad_h_ = static_cast<int>(0.1*(term_height_));
     pad_w_ = static_cast<int>(0.05*(term_width_));
 }
@@ -95,7 +89,7 @@ void PlotGraph::draw_axis(const std::string& ylabel)
     Point y_end = Eigen::Vector2i((ylimit_[0]),(ylimit_[1] + 1));
     add_text(xlimit_,">");
     add_text(ylimit_,"^");
-    add_text(text_x,"Time");
+    add_text(text_x,"Time (s)");
     add_text(text_y,ylabel);
 
     //Add time axis ticks
