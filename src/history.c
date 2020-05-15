@@ -61,8 +61,10 @@ HIST_ENTRY *previous_history() {
    a pointer to that entry.  If there is no next entry then return a
    NULL pointer. */
 HIST_ENTRY *next_history() {
-  return (history_offset >= history_length) ? (HIST_ENTRY *)NULL
-                                            : the_history[++history_offset];
+  return ((history_offset >= history_length) ||
+          (history_offset < 0 && !history_length))
+             ? (HIST_ENTRY *)NULL
+             : the_history[++history_offset];
 }
 
 /* Return the current history array.  The caller has to be carefull, since this
