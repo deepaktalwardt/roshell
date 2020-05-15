@@ -59,8 +59,9 @@ FloatPublisher::~FloatPublisher()
 */
 void FloatPublisher::run()
 {
+    int count_pub =0;
     srand((unsigned) time(0));
-    while (ros::ok())
+    while (ros::ok() && count_pub < 30)
     {
         std_msgs::Float32 msg;
 
@@ -69,9 +70,10 @@ void FloatPublisher::run()
 
         msg.data = num;
         pub_.publish(msg);
-
+        count_pub++;
         rate_.sleep();
     }
+    return;
 }
 
 
