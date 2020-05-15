@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 
 #include <roshell_graphics/roshell_graphics.h>
 #include <roshell_graphics/perspective_projection.h>

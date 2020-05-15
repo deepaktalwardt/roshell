@@ -59,9 +59,9 @@ FloatPublisher::~FloatPublisher()
 */
 void FloatPublisher::run()
 {
-    int count_pub =0;
+    int count_pub = 0;
     srand((unsigned) time(0));
-    while (ros::ok() && count_pub < 30)
+    while (ros::ok() && count_pub <= 30)
     {
         std_msgs::Float32 msg;
 
