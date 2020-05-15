@@ -78,7 +78,6 @@ void PlotGraph::draw_axis(const std::string& ylabel)
         text_x = Eigen::Vector2i((xlimit_[0]+2),(xlimit_[1]));
     }
     Point text_y = Eigen::Vector2i((ylimit_[0] - 2),(ylimit_[1] + 1));
-    clear_buffer();
 
     // Draw X-axis and y-axis on terminal
     add_line(origin_,xlimit_,"-");
