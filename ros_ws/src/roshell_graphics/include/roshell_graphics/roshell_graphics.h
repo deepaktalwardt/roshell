@@ -465,14 +465,7 @@ void RoshellGraphics::draw()
     {
         if (buffer_[i] != " ")  // If buffer[i] already filled, ignore
         {
-            // if (buffer_[i] == "█")
-            // {
-                out_buffer += convert_rgb_to_string_(buffer_colors_[i], buffer_[i]);
-            // }
-            // else 
-            // {
-            //     out_buffer += buffer_[i];
-            // }
+            out_buffer += convert_rgb_to_string_(buffer_colors_[i], buffer_[i]);
             continue;
         }
 
