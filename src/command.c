@@ -14,14 +14,19 @@
 #include "variable.h"
 
 void executeLine(char *input) {
+  //copy input for adding in history list 
+  char *hist_command = (char *)malloc(sizeof(input));
+  strcpy(hist_command, input);
+
   // executes a line (which can be either a program call or a shell command)
   char *tokens[MAX_ARGS + 1] = {NULL};  // array to which we'll write tokens
 
   if (0 >= parseInput(input, tokens, MAX_TOK)) return;  // if empty, skip
 
   // add the entered command to the history list
+  hist_command[strlen(hist_command) - 1] = '\0';
   using_history();
-  add_history(input);
+  add_history(hist_command);
   char *command = tokens[0];
 
   // try executing input as a shell commands

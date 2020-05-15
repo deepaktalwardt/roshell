@@ -1,4 +1,5 @@
 #include "input.h"
+
 #include <ctype.h>
 #include <dirent.h>
 #include <fcntl.h>
@@ -7,9 +8,10 @@
 #include <string.h>
 #include <termios.h>
 #include <unistd.h>
-#include "const.h"
-#include "variable.h"
 
+#include "const.h"
+#include "history.h"
+#include "variable.h"
 //------------------------------------------------------------------------------
 //  readInput()
 //
@@ -69,10 +71,46 @@ int readInput(char* input, int size, char* path_str) {
 
       switch (ch3) {
         case 0x41:  // Up button
-          // TODO: support history command
+          // Clear input
+          while (index > 0) {
+            input[--index] = '\0';
+            putchar('\b');
+            putchar(0x20);
+            putchar('\b');
+          }
+          // Get previous history as input and display
+          HIST_ENTRY* prev_hist = previous_history();
+          if (prev_hist != NULL) {
+            char* prev_val = prev_hist->line;
+            int len = strlen(prev_val);
+            for (int i = 0; i < len; i++) {
+              input[i] = prev_val[i];
+              putchar(prev_val[i]);
+              index++;
+            }
+          }
           break;
         case 0x42:  // Down button
-          // TODO: support history command
+
+          // Clear input
+          while ((index > 0)) {
+            input[--index] = '\0';
+            putchar('\b');
+            putchar(0x20);
+            putchar('\b');
+          }
+          // Get next history as input and display
+          HIST_ENTRY* next_hist = next_history();
+          if (next_hist != NULL) {
+            char* next_val = next_hist->line;
+            int len = strlen(next_val);
+
+            for (int i = 0; i < len; i++) {
+              input[i] = next_val[i];
+              putchar(next_val[i]);
+              index++;
+            }
+          }
           break;
         case 0x43:  // Right button
         case 0x44:  // Left button
@@ -84,10 +122,44 @@ int readInput(char* input, int size, char* path_str) {
           ch6 = getchar();
           switch (ch6) {
             case 0x41:  // Up button
-              // TODO: support history command
+              while (index > 0) {
+                input[--index] = '\0';
+                putchar('\b');
+                putchar(0x20);
+                putchar('\b');
+              }
+              // Get previous history as input and display
+              HIST_ENTRY* prev_hist = previous_history();
+              if (prev_hist != NULL) {
+                char* prev_val = prev_hist->line;
+                int len = strlen(prev_val);
+                for (int i = 0; i < len; i++) {
+                  input[i] = prev_val[i];
+                  putchar(prev_val[i]);
+                  index++;
+                }
+              }
               break;
             case 0x42:  // Down button
-              // TODO: support history command
+              // Clear input
+              while ((index > 0)) {
+                input[--index] = '\0';
+                putchar('\b');
+                putchar(0x20);
+                putchar('\b');
+              }
+              // Get next history as input and display
+              HIST_ENTRY* next_hist = next_history();
+              if (next_hist != NULL) {
+                char* next_val = next_hist->line;
+                int len = strlen(next_val);
+
+                for (int i = 0; i < len; i++) {
+                  input[i] = next_val[i];
+                  putchar(next_val[i]);
+                  index++;
+                }
+              }
               break;
             case 0x43:  // Right button
             case 0x44:  // Left button
