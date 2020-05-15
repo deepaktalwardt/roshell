@@ -12,21 +12,22 @@
 #include "history.h"
 #include "source.h"
 #include "variable.h"
-//Global variable for mainting the process id used for Ctrl+c functionality
-pid_t pid,main_process;
 /*
 Interrupt signal handler that tests for the child process in the if statement
 Else it kill the whole program.
 */
 void sigint_handler(int sig){
-    if(pid!=main_process){
-    kill(pid,SIGQUIT);
-    pid=main_process;
-    }
-    else{
-        printf("\n");
-        exit(0);
-    }
+  if(process_id != main_process)
+  {
+    kill(process_id,SIGQUIT);
+    process_id = main_process;
+    return;
+  }
+  else
+  {
+    printf("\n");
+    kill(main_process,SIGTERM);
+  }
 }
 
 void executeLine(char *input) {
@@ -114,11 +115,11 @@ int parseInput(char input[], char *tokens[], size_t max_tok) {
 }
 
 void executeProgram(char *tokens[]) {
+  process_id=fork();
   // executes program (such as /bin/ls, /usr/bin/git, etc. as a child process)
-  if (fork() == 0)  // if inside the child process
+  if (process_id == 0)  // if inside the child process
   {
     int comm_res = execvp(tokens[0], tokens);
-
     if (comm_res == -1)  // execvp encountered error
     {
       printf("Command '%s' exited with the following error: %s \n", tokens[0],
