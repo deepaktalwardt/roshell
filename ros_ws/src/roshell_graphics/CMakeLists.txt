@@ -169,10 +169,6 @@ add_executable(roshell_graphics_test_node
   src/roshell_graphics_test_node.cpp
 )
 
-add_executable(roshell_graphics_plot_node
-  src/roshell_graphics_plot_node.cpp
-)
-
 add_executable(pcd_visualizer_node
   src/pcd_visualizer_node.cpp
 )
@@ -202,11 +198,6 @@ add_executable(image_viewer_node
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(roshell_graphics_test_node
-  ${${PROJECT_NAME}_EXPORTED_TARGETS} 
-  ${catkin_EXPORTED_TARGETS}
-)
-
-add_dependencies(roshell_graphics_plot_node
   ${${PROJECT_NAME}_EXPORTED_TARGETS} 
   ${catkin_EXPORTED_TARGETS}
 )
@@ -267,11 +258,6 @@ target_link_libraries(float_visualizer_node
 )
 
 target_link_libraries(image_viewer_node
-  ${catkin_LIBRARIES}
-  ${OpenCV_LIBRARIES}
-)
-
-target_link_libraries(roshell_graphics_plot_node
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )

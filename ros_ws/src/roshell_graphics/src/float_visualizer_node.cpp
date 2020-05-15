@@ -27,6 +27,9 @@ class FloatVisualizer
         float max_val_;
 
         ros::Subscriber sub_;
+        std::shared_ptr<roshell_graphics::PlotGraph> pg_;
+
+        std::vector<float> points_;
 };
 
 FloatVisualizer::FloatVisualizer(
@@ -38,6 +41,7 @@ FloatVisualizer::FloatVisualizer(
     max_val_(max_val)
 {
     // TODO(Parshwa): Creating plotting object here
+    sub_ = nh_.subscribe<std_msgs::Float32>(topic, 10, &FloatVisualizer::callback, this);
     pg_ = std::make_shared<roshell_graphics::PlotGraph>();
 }
 
@@ -47,16 +51,16 @@ FloatVisualizer::~FloatVisualizer()
 
 void FloatVisualizer::callback(const std_msgs::Float32::ConstPtr& msg)
 {
-
     // TODO(Parshwa): Add plotting logic here
     pg_->clear_buffer();
-    std::cout << "Received: " << msg->data << std::endl;
-    std::string ylabel="Y-axis"
-    std::vector <float> point_vector;
-    point_vector.push_back(msg->data);
 
-    pg_->PlotPoints(point_vector,min_val_,max_val_,ylabel);
-    pg_->draw()
+    std::cout << "Received: " << msg->data << std::endl;
+    std::string ylabel = "Y-axis";
+
+    points_.push_back(msg->data);
+
+    pg_->plot_points(points_, min_val_, max_val_, ylabel);
+    pg_->draw();
 }
 
 }  // namespace roshell_graphics
