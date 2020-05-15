@@ -7,7 +7,7 @@
 #include <roshell_graphics/roshell_graphics.h>
 #include <roshell_graphics/perspective_projection.h>
 
-/**
+/**s
  * Function to test line drawing capabilities
 */
 void draw_random_lines(
@@ -100,7 +100,7 @@ void draw_rotating_cube(
     Eigen::Matrix2Xf points_in_image_frame(2, 8);
 
     roshell_graphics::Camera cam;
-    Eigen::Vector3f cam_loc(8000, 10000, 5000);
+    Eigen::Vector3f cam_loc(40000, 50000, 25000);
     cam.location = cam_loc;
     cam.focal_distance = 3000;
 

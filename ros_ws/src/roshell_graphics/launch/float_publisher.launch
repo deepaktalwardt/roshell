@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="topic" default="/random/float"/>
-    <arg name="min_val" default="5"/>
-    <arg name="max_val" default="40"/>
+    <arg name="min_val" default="1"/>
+    <arg name="max_val" default="15"/>
     <arg name="rate" default="1"/>
 
     <node name="float_publisher" pkg="roshell_graphics" type="float_publisher_node" output="screen">
