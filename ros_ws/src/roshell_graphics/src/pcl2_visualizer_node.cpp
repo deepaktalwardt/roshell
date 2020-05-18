@@ -24,7 +24,8 @@ class Pcl2VisualizerNode
             const int& cam_y,
             const int& cam_z,
             const int& cam_focal_distance,
-            const int& subsampling);
+            const int& subsampling,
+            const bool& colormap);
 
         ~Pcl2VisualizerNode();
 
@@ -39,6 +40,7 @@ class Pcl2VisualizerNode
         ros::Subscriber pcl_sub_;
 
         int subsampling_ = 1;
+        bool colormap_ = true;
 };
 
 Pcl2VisualizerNode::Pcl2VisualizerNode(
@@ -47,9 +49,11 @@ Pcl2VisualizerNode::Pcl2VisualizerNode(
     const int& cam_y,
     const int& cam_z,
     const int& cam_focal_distance,
-    const int& subsampling):
+    const int& subsampling,
+    const bool& colormap):
     in_topic_(in_topic),
-    subsampling_(subsampling)
+    subsampling_(subsampling),
+    colormap_(colormap)
 {
     ros::NodeHandle nh;
 
@@ -84,13 +88,20 @@ void Pcl2VisualizerNode::pcl_visualizer_callback(const pcl::PointCloud<pcl::Poin
     {
         points_in_world_frame.col(i) << points[idx].x, points[idx].y, points[idx].z;
         idx += subsampling_;
-    }
-
-    Eigen::Matrix3Xf points_in_image_plane_with_z_world = pp_->project_multiple_world_points_with_z_world(points_in_world_frame);
+    }  
 
     rg_->clear_buffer();
-    rg_->add_points(points_in_image_plane_with_z_world);
-
+    
+    if (colormap_)
+    {
+        Eigen::Matrix3Xf points_in_image_plane_with_z_world = pp_->project_multiple_world_points_with_z_world(points_in_world_frame);
+        rg_->add_points(points_in_image_plane_with_z_world);
+    }
+    else
+    {
+        Eigen::Matrix2Xf points_in_image_plane = pp_->project_multiple_world_points(points_in_world_frame);
+        rg_->add_points(points_in_image_plane);
+    }
     rg_->draw();
 }
 
@@ -104,6 +115,7 @@ int main(int argc, char** argv)
 
     std::string in_topic = "";
     int cam_x, cam_y, cam_z, cam_focal_distance, subsampling;
+    bool colormap = true;
 
     int bad_params = 0;
 
@@ -113,6 +125,7 @@ int main(int argc, char** argv)
     bad_params += !pnh.getParam("cam_z", cam_z);
     bad_params += !pnh.getParam("cam_focal_distance", cam_focal_distance);
     bad_params += !pnh.getParam("subsampling", subsampling);
+    bad_params += !pnh.getParam("colormap", colormap);
 
     if (bad_params > 0)
     {
@@ -126,7 +139,8 @@ int main(int argc, char** argv)
         cam_y,
         cam_z,
         cam_focal_distance,
-        subsampling);
+        subsampling,
+        colormap);
 
     ros::spin();
     return 0;
