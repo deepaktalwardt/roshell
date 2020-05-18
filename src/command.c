@@ -12,16 +12,38 @@
 #include "history.h"
 #include "source.h"
 #include "variable.h"
+/*
+Interrupt signal handler that tests for the child process in the if statement
+Else it kill the whole program.
+*/
+void sigint_handler(int sig){
+  if(process_id != main_process)
+  {
+    kill(process_id,SIGTERM);
+    process_id = main_process;
+    return;
+  }
+  else
+  {
+    printf("\n");
+    kill(main_process,SIGTERM);
+  }
+}
 
 void executeLine(char *input) {
+  //copy input for adding in history list
+  char *hist_command = (char *)malloc(strlen(input)*sizeof(char));
+  strcpy(hist_command, input);
+
   // executes a line (which can be either a program call or a shell command)
   char *tokens[MAX_ARGS + 1] = {NULL};  // array to which we'll write tokens
 
   if (0 >= parseInput(input, tokens, MAX_TOK)) return;  // if empty, skip
 
   // add the entered command to the history list
+  hist_command[strlen(hist_command) - 1] = '\0';
   using_history();
-  add_history(input);
+  add_history(hist_command);
   char *command = tokens[0];
 
   // try executing input as a shell commands
@@ -98,11 +120,11 @@ int parseInput(char input[], char *tokens[], size_t max_tok) {
 }
 
 void executeProgram(char *tokens[]) {
+  process_id=fork();
   // executes program (such as /bin/ls, /usr/bin/git, etc. as a child process)
-  if (fork() == 0)  // if inside the child process
+  if (process_id == 0)  // if inside the child process
   {
     int comm_res = execvp(tokens[0], tokens);
-
     if (comm_res == -1)  // execvp encountered error
     {
       printf("Command '%s' exited with the following error: %s \n", tokens[0],

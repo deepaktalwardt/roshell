@@ -4,6 +4,7 @@
 
 #include <roshell_graphics/roshell_graphics.h>
 #include <roshell_graphics/perspective_projection.h>
+#include <roshell_graphics/line_plotting.h>
 
 namespace roshell_graphics
 {
@@ -26,6 +27,9 @@ class FloatVisualizer
         float max_val_;
 
         ros::Subscriber sub_;
+        std::shared_ptr<roshell_graphics::PlotGraph> pg_;
+
+        std::vector<float> points_;
 };
 
 FloatVisualizer::FloatVisualizer(
@@ -36,10 +40,8 @@ FloatVisualizer::FloatVisualizer(
     min_val_(min_val),
     max_val_(max_val)
 {
-    // TODO(Parshwa): Creating plotting object here
-
-    sub_ = nh_.subscribe<std_msgs::Float32>
-        (topic, 10, &FloatVisualizer::callback, this);
+    sub_ = nh_.subscribe<std_msgs::Float32>(topic, 10, &FloatVisualizer::callback, this);
+    pg_ = std::make_shared<roshell_graphics::PlotGraph>();
 }
 
 FloatVisualizer::~FloatVisualizer()
@@ -48,8 +50,14 @@ FloatVisualizer::~FloatVisualizer()
 
 void FloatVisualizer::callback(const std_msgs::Float32::ConstPtr& msg)
 {
-    // TODO(Parshwa): Add plotting logic here
-    std::cout << "Received: " << msg->data << std::endl;
+    pg_->clear_buffer();
+
+    std::string ylabel = "Y-axis";
+
+    points_.push_back(msg->data);
+
+    pg_->plot_points(points_, min_val_, max_val_, ylabel);
+    pg_->draw();
 }
 
 }  // namespace roshell_graphics

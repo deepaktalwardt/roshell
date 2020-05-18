@@ -15,10 +15,17 @@ int main(int argc, char* argv[], char* envp[]) {
   // envp - environment pointer
   // TODO: Should roshell inherit envp from parent shells?
 
+  //For Ctrl+c functionality
+  signal(SIGINT,sigint_handler);
+
   char hostname[_SC_HOST_NAME_MAX];
   char username[_SC_LOGIN_NAME_MAX];
   gethostname(hostname, _SC_HOST_NAME_MAX);  // system call to get the hostname
   getlogin_r(username, _SC_LOGIN_NAME_MAX);  // system call to get the username
+
+  // Use for ctrl+c 
+  main_process = getpid();
+  process_id=getpid();
 
   // print out all the environment variables
   for (int i = 0; envp[i]; ++i) {
