@@ -32,7 +32,7 @@ void sigint_handler(int sig){
 
 void executeLine(char *input) {
   //copy input for adding in history list
-  char *hist_command = (char *)malloc(strlen(input));
+  char *hist_command = (char *)malloc(strlen(input)*sizeof(char));
   strcpy(hist_command, input);
 
   // executes a line (which can be either a program call or a shell command)
