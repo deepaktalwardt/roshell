@@ -100,9 +100,9 @@ void draw_rotating_cube(
     Eigen::Matrix2Xf points_in_image_frame(2, 8);
 
     roshell_graphics::Camera cam;
-    Eigen::Vector3f cam_loc(40000, 50000, 25000);
+    Eigen::Vector3f cam_loc(10000, 10000, 10000);
     cam.location = cam_loc;
-    cam.focal_distance = 3000;
+    cam.focal_distance = 2000;
 
     roshell_graphics::PerspectiveProjection pp(cam);
 
@@ -148,17 +148,17 @@ void draw_rotating_cube(
         p8(0) = points_in_image_frame(0, 7);
         p8(1) = points_in_image_frame(1, 7);
 
-        rg.add_line(p1, p2, "&"); // example
+        rg.add_line(p1, p2, "-"); // example
         rg.add_line(p2, p3, c);
         rg.add_line(p3, p4, c);
         rg.add_line(p4, p1, c);
 
-        rg.add_line(p5, p6, "G");
+        rg.add_line(p5, p6, "-");
         rg.add_line(p6, p7, c);
         rg.add_line(p7, p8, c);
         rg.add_line(p8, p5, c);
 
-        rg.add_line(p1, p5, "M");
+        rg.add_line(p1, p5, "-");
         rg.add_line(p2, p6, c);
         rg.add_line(p3, p7, c);
         rg.add_line(p4, p8, c);
@@ -184,9 +184,9 @@ int main(int argc, char** argv)
 
     // PixelProjection Object
     roshell_graphics::Camera cam;
-    Eigen::Vector3f cam_loc(10000, 10000, 10000);
+    Eigen::Vector3f cam_loc(1000, 1000, 1000);
     cam.location = cam_loc;
-    cam.focal_distance = 3000;
+    cam.focal_distance = 1000;
     roshell_graphics::PerspectiveProjection pp(cam);
 
     /**
@@ -197,7 +197,7 @@ int main(int argc, char** argv)
     // draw_lines(rg);
     // draw_3D_axis(rg, pp);
     
-    draw_rotating_cube(rg, "/");
+    draw_rotating_cube(rg, "-");
     // test_add_text(rg, "Yay! this actually works now let's stress it! It needs to be longer than this");
 
     return 0;
