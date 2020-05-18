@@ -16,6 +16,14 @@ $: ./roshell
 user@computer $:
 ```
 
+Sourcing ```build.sh``` script file builds both ROS file (catkin_make) and roshell (make), launches separate terminals for roscore and rosbag, and starts ```roshell``` executable.  From ```roshell``` command, you can run roslaunch to see the visualizer.
+
+```
+$: cd ros_ws
+$: roslaunch roshell_graphics pcl2_visualizer.launch
+```
+
+
 You should be running the following commands:
 ```
 $: ./roshell
