@@ -29,10 +29,6 @@ You should see a bunch of environment variables, and then a prompt in white/blue
 Currently, `roshell` supports many of the commands and features that bash supports. Some examples:
 
 ```
-$: cd ros_ws
-$: roslaunch roshell_graphics pcl2_visualizer.launch
-```
-```
 [roshell] deepak@deepak-pc:/home/deepak/roshell$ whoami
 deepak
 [roshell] deepak@deepak-pc:/home/deepak/roshell$ cd ros_ws
