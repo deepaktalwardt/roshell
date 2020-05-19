@@ -121,7 +121,7 @@ With colormap turned on, the visualization looks something like this:
 ![](images/pcl2_visualizer_color.gif)
 
 ## Line Plots
-![](images/lineplot.png)
+![](images/time_series.png)
 To create line plots, we first need to have a publisher node that will publish random values to be plot on the line plot. To do that, launch the following
 ```
 roslaunch roshell_graphics float_visualizer.launch
