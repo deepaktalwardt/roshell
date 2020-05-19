@@ -46,7 +46,7 @@ This is a list of features that we implemented along with a brief description on
 ```source``` command reads a text file with multiple lines of commands.
 To test the command, source "test.sh" script file.
 ```
-source test.sh
+[roshell] deepak@deepak-pc:/home/deepak/roshell$ source test.sh
 ```
 ## Auto Complete
 
@@ -58,24 +58,31 @@ For the other words in command line, it searches files the current directory onl
 ## Interupting a program with Ctrl+C
 The user can interrupt program execution with Ctrl+C
 ```
-./roshell
-sleep 10000
+[roshell] deepak@deepak-pc:/home/deepak/roshell$ sleep 10000
 ```
 
 ```sleep``` will be sent a SIGINT, and will exit. However, ```roshell``` does **not** exit.
-
-<hr>
 
 ## Variable Handling
 
 A variable can be assigned using '=' and retrieved with '$'
 ```
-var=1
-echo $var
+[roshell] deepak@deepak-pc:/home/deepak/roshell$ var=1
+[roshell] deepak@deepak-pc:/home/deepak/roshell$ echo $var
 1
 ```
+## History command
+```
+[roshell] deepak@deepak-pc:/home/deepak/roshell$ history
+History List:
+whoami
+var=1
+echo $var
+[roshell] deepak@deepak-pc:/home/deepak/roshell$ history clear
+History Cleared
+```
 
-<hr>
+You can also use the up and down arrows to scroll through previously entered commands.
 
 # Robotic Features
 Before running these features, ensure that you have built `roshell` with ROS.
@@ -114,7 +121,7 @@ With colormap turned on, the visualization looks something like this:
 ![](images/pcl2_visualizer_color.gif)
 
 ## Line Plots
-
+![](images/lineplot.png)
 To create line plots, we first need to have a publisher node that will publish random values to be plot on the line plot. To do that, launch the following
 ```
 roslaunch roshell_graphics float_visualizer.launch
@@ -122,7 +129,7 @@ roslaunch roshell_graphics float_visualizer.launch
 This will start both a floating point publisher and a subscriber and start printing values to the scren.
 
 ## Visualizing images
-
+![](images/image.gif)
 To test image functionality, make sure that the ROS bag you downloaded earlier is playing, then you can run the node.
 ```bash
 rosrun roshell_graphics image_viewer_node
