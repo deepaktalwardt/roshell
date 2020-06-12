@@ -4,6 +4,7 @@ roshell - An interactive shell for robotics applications
 You can do this in `roshell`!
 ![](images/pcl2_visualizer_color.gif)
 ![](images/image.gif)
+![](images/time_series.png)
 
 # Quickstart:
 There are two options to build and run `roshell`.
